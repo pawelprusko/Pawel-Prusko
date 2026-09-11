@@ -69,9 +69,17 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 2: Selected Scenes */}
+        {/* Section 2: Curated Scenes */}
         <section className="mb-24">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">02 / Selected Scenes</h2>
+          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">02 / Curated Scenes</h2>
+          <div className="flex flex-col gap-4 mb-8 max-w-2xl">
+            <p className="text-lg text-text-main font-sans leading-relaxed">
+              A selection of 12 visual narratives across four culinary domains: Fine Dining &amp; Seafood, Elevated Comfort &amp; Street Food, Breakfast &amp; Desserts, and Liquid Dynamics &amp; Mixology.
+            </p>
+            <p className="text-lg text-text-main font-sans leading-relaxed">
+              Every scene tells a cohesive story through a motion asset and four purposeful shots: Establishing, Action, Post-Action, and Macro.
+            </p>
+          </div>
           <div className="flex flex-col gap-20 md:gap-28">
             {selectedScenes.map((scene) => (
               <SceneCard
@@ -170,10 +178,10 @@ export default function Home() {
           <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(5)} / Direct Access</h2>
           <div className="flex flex-col">
             <div className="flex flex-col gap-4 mb-6">
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-lg">
+              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
                 Available for global commissions, agency pitches, and monthly brand retainers.
               </p>
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-lg">
+              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
                 Request a tailored sample render for your upcoming launch during your initial inquiry.
               </p>
             </div>

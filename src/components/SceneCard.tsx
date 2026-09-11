@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type Key } from 'react';
 import { Link } from 'react-router-dom';
 
 interface SceneCardProps {
+  key?: Key;
   id: string;
   videoSrc: string;
   title: string;

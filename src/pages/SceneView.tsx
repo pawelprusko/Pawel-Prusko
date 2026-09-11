@@ -94,7 +94,7 @@ export default function SceneView() {
             03 / Business Brief
           </h2>
           <div className="flex flex-col">
-            <p className="text-lg text-text-main font-sans leading-relaxed max-w-lg">
+            <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
               {currentScene.businessBrief || 'The viral factor is driven by the perfectly AI-frozen motion of descending sea salt, creating a mystical aura over the dish. This is an ideal concept for premium specialty brands (e.g., artisanal salt producers, organic CPG brands) or luxury restaurants promoting a plant-based B2B menu.'}
             </p>
           </div>
