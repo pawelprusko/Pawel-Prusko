@@ -81,7 +81,9 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/scene/:domainId/:sceneId" element={<SceneView />} />
         <Route path="/scene/:id" element={<SceneView />} />
+        <Route path="/scene/*" element={<SceneView />} />
       </Routes>
       <Analytics />
     </BrowserRouter>

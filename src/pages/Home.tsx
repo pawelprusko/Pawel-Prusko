@@ -2,8 +2,27 @@ import { motion } from 'motion/react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SceneCard from '../components/SceneCard';
-import { getScenes } from '../lib/api';
+import { getScenes, type Scene } from '../lib/api';
 import { useState } from 'react';
+
+const CULINARY_DOMAINS = [
+  {
+    id: 'fine-dining-seafood',
+    title: 'Fine Dining & Seafood',
+  },
+  {
+    id: 'elevated-comfort-street-food',
+    title: 'Elevated Comfort & Street Food',
+  },
+  {
+    id: 'breakfast-desserts',
+    title: 'Breakfast & Desserts',
+  },
+  {
+    id: 'liquid-dynamics-mixology',
+    title: 'Liquid Dynamics & Mixology',
+  },
+];
 
 const ENGINE_FEATURES = [
   { number: '01', title: 'Variable Injection Architecture', desc: 'Preserving brand DNA and a consistent Quiet Luxury aesthetic while seamlessly introducing new product contexts, backgrounds, and styling props.' },
@@ -46,7 +65,7 @@ const FRAMEWORKS = [
 
 export default function Home() {
   const allScenes = getScenes();
-  const SHOW_LATEST_DROP = false; // Toggle this to true to show the section again
+  const SHOW_LATEST_DROP = true; // Toggle this to true to show the section again
   const latestDropScene = allScenes.find(s => s.id === 'the-latest-drop');
   const selectedScenes = allScenes.filter(s => s.id !== 'the-latest-drop');
   const [expandedFramework, setExpandedFramework] = useState<string | null>(null);
@@ -63,7 +82,7 @@ export default function Home() {
       <main className="max-w-3xl mx-auto px-6 pt-16">
         {/* Section 0: Author */}
         <section className="mb-24 mt-6">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">01 / Statement</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">01 / Statement</h2>
           <div className="text-[22px] md:text-[36px] text-text-main font-mono leading-[1.4] md:leading-[1.4]">
            Taste beyond limits. AI Culinary Art Director crafting high-fashion, editorial food visuals & motion. Eliminating physical studio constraints and overhead to deliver campaign-ready assets in days, not weeks.
           </div>
@@ -71,32 +90,47 @@ export default function Home() {
 
         {/* Section 2: Curated Scenes */}
         <section className="mb-24">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">02 / Curated Scenes</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">02 / Curated Scenes</h2>
           <div className="flex flex-col gap-4 mb-8 max-w-2xl">
             <p className="text-lg text-text-main font-sans leading-relaxed">
-              A selection of 12 visual narratives across four culinary domains: Fine Dining &amp; Seafood, Elevated Comfort &amp; Street Food, Breakfast &amp; Desserts, and Liquid Dynamics &amp; Mixology.
+              A selection of 12 visual narratives across four culinary pillars.
             </p>
             <p className="text-lg text-text-main font-sans leading-relaxed">
-              Every scene tells a cohesive story through a motion asset and four purposeful shots: Establishing, Action, Post-Action, and Macro.
+              Every scene tells a cohesive story through a motion asset and four purposeful shots.
             </p>
           </div>
-          <div className="flex flex-col gap-20 md:gap-28">
-            {selectedScenes.map((scene) => (
-              <SceneCard
-                key={scene.id}
-                id={scene.id}
-                videoSrc={scene.videoUrl}
-                title={scene.title}
-                desc={scene.desc}
-              />
-            ))}
+          <div className="flex flex-col gap-24 md:gap-32">
+            {CULINARY_DOMAINS.map((domain) => {
+              const domainScenes = selectedScenes
+                .filter((s) => s.domainId === domain.id || s.id.startsWith(`${domain.id}/`))
+                .sort((a, b) => (a.sceneSubId || a.id).localeCompare(b.sceneSubId || b.id, undefined, { numeric: true }));
+
+              return (
+                <div key={domain.id} className="flex flex-col">
+                  <h3 className="text-xs font-mono tracking-widest text-text-muted mb-8 uppercase">
+                    {domain.title}
+                  </h3>
+                  <div className="flex flex-col gap-20 md:gap-28">
+                    {domainScenes.map((scene) => (
+                      <SceneCard
+                        key={scene.id}
+                        id={scene.id}
+                        videoSrc={scene.videoUrl}
+                        title={scene.title}
+                        desc={scene.desc}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
 
         {/* Section 3: The Latest Drop */}
         {(SHOW_LATEST_DROP && latestDropScene) && (
           <section className="mb-24">
-            <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">03 / The Latest Drop</h2>
+            <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">03 / The Latest Drop</h2>
             <div className="flex flex-col gap-20 md:gap-28">
               <SceneCard
                 id={latestDropScene.id}
@@ -112,7 +146,7 @@ export default function Home() {
 
         {/* Section 4: The Engine */}
         <section className="mb-24">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(3)} / The Engine</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(3)} / The Engine</h2>
           <div className="flex flex-col gap-8 md:gap-12">
             {ENGINE_FEATURES.map((feat) => (
               <div key={feat.number} className="flex flex-col md:flex-row items-baseline md:items-start gap-2 md:gap-6">
@@ -134,7 +168,7 @@ export default function Home() {
 
         {/* Section 5: Frameworks */}
         <section className="mb-24">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(4)} / Frameworks</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(4)} / Frameworks</h2>
           <p className="text-lg text-text-main font-sans mb-8 leading-relaxed max-w-2xl">
             Bespoke visual content pipelines built around complete multi-angle scenes for social media calendars, digital campaigns, and high-stakes pitches.
           </p>
@@ -175,7 +209,7 @@ export default function Home() {
 
         {/* Section 6: Direct Access */}
         <section id="contact" className="mb-24">
-          <h2 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(5)} / Direct Access</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(5)} / Direct Access</h2>
           <div className="flex flex-col">
             <div className="flex flex-col gap-4 mb-6">
               <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
