@@ -54,6 +54,7 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
         <video
           ref={videoRef}
           src={videoSrc}
+          autoPlay
           muted
           loop
           playsInline
