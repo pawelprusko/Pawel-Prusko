@@ -219,7 +219,7 @@ export default function Home() {
                 Request a tailored sample render for your upcoming launch during your initial inquiry.
               </p>
             </div>
-            <a href="mailto:hello@pawelprusko.com" className="font-heading text-3xl md:text-5xl lg:text-6xl text-secondary hover:text-[#886944] transition-colors inline-block w-max">
+            <a href="mailto:hello@pawelprusko.com" className="font-heading text-2xl text-secondary hover:text-[#886944] transition-colors inline-block w-max">
               hello@pawelprusko.com
             </a>
           </div>
