@@ -66,7 +66,7 @@ export default function SceneView() {
 
         {/* Hero Video */}
         <section className="mb-24">
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-none bg-[#E6DBD2]">
+          <div className="relative w-full overflow-hidden rounded-none bg-[#E6DBD2]">
             <video
               src={currentScene.videoUrl}
               autoPlay
@@ -74,7 +74,7 @@ export default function SceneView() {
               loop
               playsInline
               preload="auto"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="w-full h-auto block"
             />
           </div>
         </section>
@@ -92,7 +92,7 @@ export default function SceneView() {
               { label: 'Macro Shot', src: currentScene.images?.macro, fallback: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop' },
             ].map((shot, i) => (
               <div key={i} className="flex flex-col gap-3">
-                <div className="relative w-full aspect-[4/5] md:aspect-[4/3] overflow-hidden bg-[#E6DBD2]">
+                <div className="relative w-full overflow-hidden bg-[#E6DBD2]">
                   <img 
                     src={shot.src || shot.fallback} 
                     alt={shot.label} 
@@ -102,7 +102,7 @@ export default function SceneView() {
                         target.src = shot.fallback;
                       }
                     }}
-                    className="absolute inset-0 w-full h-full object-cover" 
+                    className="w-full h-auto block" 
                   />
                 </div>
                 <span className="text-xs font-mono tracking-widest text-text-muted uppercase">{shot.label}</span>

@@ -68,7 +68,7 @@ export default function Home() {
   const SHOW_LATEST_DROP = true; // Toggle this to true to show the section again
   const latestDropScene = allScenes.find(s => s.id === 'the-latest-drop');
   const selectedScenes = allScenes.filter(s => s.id !== 'the-latest-drop');
-  const [expandedFramework, setExpandedFramework] = useState<string | null>(null);
+  const [expandedFramework, setExpandedFramework] = useState<string | null>('01');
 
   const getSectionNumber = (baseNum: number) => {
     const num = SHOW_LATEST_DROP ? baseNum + 1 : baseNum;
