@@ -8,7 +8,7 @@ import { useState } from 'react';
 const CULINARY_DOMAINS = [
   {
     id: 'fine-dining-seafood',
-    title: 'Fine Dining & Seafood',
+    title: 'Fine Dining, Vegetarian & Seafood',
   },
   {
     id: 'elevated-comfort-street-food',
@@ -130,7 +130,7 @@ export default function Home() {
         {/* Section 3: The Latest Drop */}
         {(SHOW_LATEST_DROP && latestDropScene) && (
           <section className="mb-24">
-            <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">03 / The Latest Drop</h2>
+            <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">03 / STUDIO FEED</h2>
             <div className="flex flex-col gap-20 md:gap-28">
               <SceneCard
                 id={latestDropScene.id}
