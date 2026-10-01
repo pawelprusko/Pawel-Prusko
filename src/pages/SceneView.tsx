@@ -111,23 +111,11 @@ export default function SceneView() {
           </div>
         </section>
 
-        {/* Business Brief */}
-        <section className="mb-24">
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            03 / Business Brief
-          </h2>
-          <div className="flex flex-col">
-            <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
-              {currentScene.businessBrief || 'The viral factor is driven by the perfectly AI-frozen motion of descending sea salt, creating a mystical aura over the dish. This is an ideal concept for premium specialty brands (e.g., artisanal salt producers, organic CPG brands) or luxury restaurants promoting a plant-based B2B menu.'}
-            </p>
-          </div>
-        </section>
-
         {/* Explore More Scenes */}
         {otherScenes.length > 0 && (
           <section className="mb-12">
             <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-              04 / Continue {currentScene.domain || currentScene.domainId}
+              03 / Continue {currentScene.domain || currentScene.domainId}
             </h2>
             <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40 mb-12">
               {otherScenes.map((scene) => (
