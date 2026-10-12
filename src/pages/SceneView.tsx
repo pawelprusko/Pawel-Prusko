@@ -25,7 +25,7 @@ export default function SceneView() {
   if (!currentScene) {
     return (
       <div className="min-h-screen bg-background text-text-main flex flex-col">
-        <Header />
+        <Header categoryTitle="Home" />
         <main className="flex-1 flex items-center justify-center">
           <p className="font-mono text-sm tracking-widest uppercase">Scene not found.</p>
         </main>
@@ -41,7 +41,7 @@ export default function SceneView() {
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/30 selection:text-text-main">
-      <Header categoryTitle="Back" />
+      <Header categoryTitle="Home" />
 
       <main className="max-w-3xl mx-auto px-6 pt-12 pb-20">
         
@@ -49,7 +49,7 @@ export default function SceneView() {
         <div className="mb-12 flex items-center text-xs font-mono tracking-widest text-text-muted uppercase">
           <Link to="/" className="flex items-center gap-2 hover:text-text-main transition-colors group">
             <span className="text-lg leading-none group-hover:-translate-x-1 transition-transform mt-[-2px]">←</span>
-            Back
+            Home
           </Link>
         </div>
 

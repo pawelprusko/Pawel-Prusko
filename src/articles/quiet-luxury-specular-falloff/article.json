@@ -1,0 +1,10 @@
+{
+  "id": "quiet-luxury-specular-falloff",
+  "slug": "quiet-luxury-specular-falloff",
+  "title": "Quiet Luxury and Specular Falloff: Sculpting Micro-Reflections in Synthetic Glassware",
+  "date": "2026-07-08T10:00:00Z",
+  "category": "CULINARY ART DIRECTION",
+  "excerpt": "How micro-surface roughness and high dynamic range lighting curves establish the subconscious perception of prestige in beverage imagery.",
+  "content": "In luxury tabletop photography, light does not simply illuminate an object; it negotiates with materiality. When rendering high-end spirits and crystal glassware in generative pipelines, standard diffusion models often produce either plasticky sheen or over-clamped specular blooms.<br><br><b>The Physics of Subsurface Scattering</b><br><br>The human visual cortex distinguishes between cheap acrylic and hand-blown lead crystal within eighty milliseconds. This assessment hinges on caustic dispersion, chromatic fringing at bevel edges, and the gradient softness of specular roll-off.<br><br>By treating lighting rigs as mathematical vector arrays rather than flat prompt tokens, we reconstruct the tactile gravitas of heritage crystalware without a single physical fingerprint on set.",
+  "ogImage": "/og-image.jpg"
+}

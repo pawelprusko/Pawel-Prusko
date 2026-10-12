@@ -46,6 +46,7 @@ const FRAMEWORKS = [
   {
     number: '03',
     title: 'Growth Retainer',
+    isBestseller: true,
     target: 'Brands seeking a consistent, high-end weekly presence across all digital touchpoints.',
     output: '4 Complete Scenes per month — Each scene includes 1 video loop + 4 editorial photos (wide, action, post-action, and macro angles designed for carousel posts). Total: 4 seamless videos + 16 high-res photos.'
   },
@@ -68,7 +69,7 @@ export default function Home() {
   const SHOW_LATEST_DROP = true; // Toggle this to true to show the section again
   const latestDropScene = allScenes.find(s => s.id === 'the-latest-drop');
   const selectedScenes = allScenes.filter(s => s.id !== 'the-latest-drop');
-  const [expandedFramework, setExpandedFramework] = useState<string | null>('01');
+  const [expandedFramework, setExpandedFramework] = useState<string | null>('03');
 
   const getSectionNumber = (baseNum: number) => {
     const num = SHOW_LATEST_DROP ? baseNum + 1 : baseNum;
@@ -77,7 +78,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/30 selection:text-text-main">
-      <Header />
+      <Header showArticles={true} />
 
       <main className="max-w-3xl mx-auto px-6 pt-16">
         {/* Section 0: Author */}
@@ -139,6 +140,7 @@ export default function Home() {
                 desc={latestDropScene.desc}
                 externalLink="https://www.instagram.com/pawelprusko?igsh=MTMxMnRtbWJ3emRkcg%3D%3D&utm_source=qr"
                 buttonText="See on Instagram"
+                badgeText="EXTENDED SHOWCASE"
               />
             </div>
           </section>
@@ -181,7 +183,12 @@ export default function Home() {
                     onClick={() => setExpandedFramework(isExpanded ? null : fw.number)}
                     className="flex items-center justify-between w-full py-4 text-left group gap-4"
                   >
-                    <div className="flex-1">
+                    <div className="flex-1 flex flex-col items-start gap-1.5">
+                      {fw.isBestseller && (
+                        <span className="bg-[#2C2C2C] text-[#F9F2EA] text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 font-medium select-none">
+                          MOST REQUESTED
+                        </span>
+                      )}
                       <h3 className="font-heading text-2xl text-secondary group-hover:text-[#886944] transition-colors">
                         {fw.title}
                       </h3>

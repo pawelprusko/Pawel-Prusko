@@ -9,9 +9,10 @@ interface SceneCardProps {
   desc: string;
   externalLink?: string;
   buttonText?: string;
+  badgeText?: string;
 }
 
-export default function SceneCard({ id, videoSrc, title, desc, externalLink, buttonText = "Explore Scene" }: SceneCardProps) {
+export default function SceneCard({ id, videoSrc, title, desc, externalLink, buttonText = "Explore Scene", badgeText }: SceneCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -62,6 +63,14 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
           className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
         />
       </div>
+
+      {badgeText && (
+        <div className="mb-2.5">
+          <span className="inline-block bg-[#2C2C2C] text-[#F9F2EA] text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 font-medium select-none">
+            {badgeText}
+          </span>
+        </div>
+      )}
       
       <h3 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary mb-3 leading-tight group-hover:text-[#886944] transition-colors duration-500">
         {title}

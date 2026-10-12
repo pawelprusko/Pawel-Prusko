@@ -3,43 +3,90 @@
 export interface Article {
   id: string;
   title: string;
+  h1?: string;
   slug: string;
   excerpt: string;
   content: string;
   category: string;
   categoryId: string;
   date: string;
-  heroImageUrl: string;
+  heroImageUrl?: string;
+  ogImage?: string;
+  seoTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
+  canonicalUrl?: string;
+  ogImageAlt?: string;
 }
 
-export function getLatestArticles(): Article[] {
-  // Read local JSON files using Vite's fast glob
-  const files = import.meta.glob('/src/articles/*/*/article.json', { eager: true });
-  const images = import.meta.glob('/src/articles/*/*/hero.png', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  
+export function formatArticleDate(dateString: string): string {
+  try {
+    const d = new Date(dateString);
+    if (isNaN(d.getTime())) return dateString;
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return dateString;
+  }
+}
+
+export function getArticles(): Article[] {
+  // Read local JSON files using Vite's fast glob - supports both /articles/*/article.json and /articles/*/*/article.json
+  const files = import.meta.glob(['/src/articles/*/*/article.json', '/src/articles/*/article.json'], { eager: true });
   const articles: Article[] = [];
 
   for (const path in files) {
     const file = files[path] as { default: any };
-    const articleData = file.default;
+    const data = file.default;
     
-    // Extract category and slug folder name from path: /src/articles/category-name/article-slug/article.json
+    // Extract slug from folder path: /src/articles/slug-name/article.json or /src/articles/category/slug-name/article.json
     const parts = path.split('/');
-    const slugFolder = parts[parts.length - 2];
-    const categoryFolder = parts[parts.length - 3];
-    
-    const imagePath = `/src/articles/${categoryFolder}/${slugFolder}/hero.png`;
-    const heroImageUrl = images[imagePath] || '';
+    const folderSlug = parts[parts.length - 2];
+    const categoryFolder = parts.length > 4 ? parts[parts.length - 3] : '';
+
+    const slug = data.slug || folderSlug;
+    const id = data.id || slug;
+
+    // Build excerpt if missing
+    let excerpt = data.excerpt || '';
+    if (!excerpt && data.content) {
+      excerpt = data.content.replace(/<[^>]*>/g, '').slice(0, 190);
+    }
 
     articles.push({
-      ...articleData,
-      categoryId: categoryFolder,
-      heroImageUrl
+      id,
+      title: data.title || '',
+      h1: data.h1,
+      slug,
+      excerpt,
+      content: data.content || '',
+      category: data.category || (categoryFolder ? categoryFolder.replace(/-/g, ' ').toUpperCase() : ''),
+      categoryId: data.categoryId || categoryFolder,
+      date: data.date || new Date().toISOString(),
+      heroImageUrl: data.heroImageUrl || '',
+      ogImage: data.ogImage || '/og-image.jpg',
+      seoTitle: data.seoTitle,
+      metaDescription: data.metaDescription,
+      keywords: data.keywords,
+      canonicalUrl: data.canonicalUrl,
+      ogImageAlt: data.ogImageAlt
     });
   }
 
-  // Sort by date descending
+  // Sort by date descending (newest first)
   return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+export function getLatestArticles(): Article[] {
+  return getArticles();
+}
+
+export function getArticleBySlug(slug: string): Article | undefined {
+  const allArticles = getArticles();
+  return allArticles.find(a => a.slug === slug || a.id === slug);
 }
 
 export interface Scene {
@@ -91,6 +138,11 @@ export function getScenes(): Scene[] {
       continue;
     }
 
+    if (path.includes('/studio/')) {
+      // Skip standalone studio scene from curated domain scenes list
+      continue;
+    }
+
     // Domain nested scene: /src/scenes/{domainFolder}/{sceneSubId}/scene.json
     const parts = path.split('/');
     const sceneSubId = parts[parts.length - 2];
@@ -117,4 +169,42 @@ export function getScenes(): Scene[] {
   }
 
   return scenes.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+}
+
+export function getStudioScene(context: 'index' | 'article' = 'index'): { title: string; desc: string; videoUrl: string } {
+  if (context === 'article') {
+    const jsonFiles = import.meta.glob(
+      ['/src/scenes/studio-article/scene.json', '/src/scenes/article-studio/scene.json'],
+      { eager: true }
+    ) as Record<string, { default?: any }>;
+    const jsonData = Object.values(jsonFiles)[0]?.default || {};
+
+    const videos = import.meta.glob(
+      [
+        '/src/scenes/studio-article/video.mp4',
+        '/src/scenes/studio-article/*.mp4',
+        '/src/scenes/article-studio/video.mp4',
+        '/src/scenes/article-studio/*.mp4',
+      ],
+      { eager: true, query: '?url', import: 'default' }
+    ) as Record<string, string>;
+    const videoUrl = Object.values(videos)[0] || '';
+
+    return {
+      title: jsonData.title || 'New-Gen Culinary Art',
+      desc: jsonData.desc || 'By replacing physical studio setups with AI workflows, we eliminate studio rentals, prop logistics, and unpredictable reshoot costs, enabling instant creative tweaks and campaign-ready “Quiet Luxury” visuals in days, not weeks.',
+      videoUrl,
+    };
+  }
+
+  const jsonFiles = import.meta.glob(['/src/scenes/studio/scene.json'], { eager: true }) as Record<string, { default?: any }>;
+  const jsonData = Object.values(jsonFiles)[0]?.default || {};
+
+  const videos = import.meta.glob(['/src/scenes/studio/video.mp4', '/src/scenes/studio/*.mp4'], { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
+  const videoUrl = Object.values(videos)[0] || '';
+  return {
+    title: jsonData.title || 'New-Gen Culinary Art',
+    desc: jsonData.desc || 'By replacing physical studio setups with AI workflows, we eliminate studio rentals, prop logistics, and unpredictable reshoot costs, enabling instant creative tweaks and campaign-ready “Quiet Luxury” visuals in days, not weeks.',
+    videoUrl,
+  };
 }
