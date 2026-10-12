@@ -1,5 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState, type MouseEvent } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StudioSection from '../components/StudioSection';
@@ -31,10 +31,23 @@ function formatArticleContent(html: string): string {
 }
 
 export default function ArticleView() {
+  const navigate = useNavigate();
   const params = useParams<{ slug?: string }>();
   const slug = params.slug || '';
   const article = getArticleBySlug(slug);
   const [showAllArchive, setShowAllArchive] = useState(false);
+
+  const handleArticleClick = (e: MouseEvent<HTMLDivElement>) => {
+    const target = (e.target as HTMLElement).closest('a');
+    if (target) {
+      const href = target.getAttribute('href');
+      if (href && href.startsWith('/')) {
+        e.preventDefault();
+        navigate(href);
+        window.scrollTo(0, 0);
+      }
+    }
+  };
 
   const allArticles: Article[] = getArticles();
   // Filter out current article so archive shows other articles (or all articles)
@@ -207,6 +220,7 @@ export default function ArticleView() {
         <article className="mb-24">
           <div
             className="article-body text-base md:text-lg text-text-main/90 font-sans"
+            onClick={handleArticleClick}
             dangerouslySetInnerHTML={{
               __html: formatArticleContent(article.content)
             }}

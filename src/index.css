@@ -82,3 +82,14 @@ body {
 .article-body li > b {
   color: inherit !important;
 }
+
+.article-body a {
+  color: var(--color-secondary) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+  transition: color 0.2s ease !important;
+}
+
+.article-body a:hover {
+  color: #886944 !important;
+}

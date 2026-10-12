@@ -17,6 +17,7 @@ export interface Article {
   keywords?: string;
   canonicalUrl?: string;
   ogImageAlt?: string;
+  aliases?: string[];
 }
 
 export function formatArticleDate(dateString: string): string {
@@ -61,6 +62,7 @@ export function getArticles(): Article[] {
       title: data.title || '',
       h1: data.h1,
       slug,
+      aliases: data.aliases || [],
       excerpt,
       content: data.content || '',
       category: data.category || (categoryFolder ? categoryFolder.replace(/-/g, ' ').toUpperCase() : ''),
@@ -86,7 +88,7 @@ export function getLatestArticles(): Article[] {
 
 export function getArticleBySlug(slug: string): Article | undefined {
   const allArticles = getArticles();
-  return allArticles.find(a => a.slug === slug || a.id === slug);
+  return allArticles.find(a => a.slug === slug || a.id === slug || a.aliases?.includes(slug));
 }
 
 export interface Scene {
