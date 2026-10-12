@@ -46,7 +46,7 @@ export default function Articles() {
             </h2>
 
             <div className="flex flex-col">
-              <Link to={`/article/${latestArticle.slug}`} className="group block mb-6 md:mb-8">
+              <Link to={`/articles/${latestArticle.slug}`} className="group block mb-6 md:mb-8">
                 <h3 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary leading-tight group-hover:text-[#886944] transition-colors duration-500">
                   {latestArticle.h1 || latestArticle.title}
                 </h3>
@@ -62,7 +62,7 @@ export default function Articles() {
 
               <div className="flex items-center">
                 <Link
-                  to={`/article/${latestArticle.slug}`}
+                  to={`/articles/${latestArticle.slug}`}
                   className="group inline-flex items-center"
                 >
                   <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 hover:border-[#886944] hover:text-[#886944] transition-all">
@@ -84,7 +84,7 @@ export default function Articles() {
             <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40">
               {visibleArchiveArticles.map((article) => (
                 <article key={article.slug} className="py-4">
-                  <Link to={`/article/${article.slug}`} className="group block">
+                  <Link to={`/articles/${article.slug}`} className="group block">
                     <div className="text-xs font-mono tracking-wider text-text-muted mb-1">
                       {formatArticleDate(article.date)}
                     </div>

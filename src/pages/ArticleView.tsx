@@ -237,7 +237,7 @@ export default function ArticleView() {
             <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40">
               {visibleArchiveArticles.map((item) => (
                 <article key={item.slug} className="py-4">
-                  <Link to={`/article/${item.slug}`} className="group block">
+                  <Link to={`/articles/${item.slug}`} className="group block">
                     <div className="text-xs font-mono tracking-wider text-text-muted mb-1">
                       {formatArticleDate(item.date)}
                     </div>
