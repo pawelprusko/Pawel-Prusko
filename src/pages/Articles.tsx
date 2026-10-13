@@ -91,6 +91,26 @@ export default function Articles() {
     };
   }, []);
 
+  // Extract first section from article content (everything before first <h2>) or fallback to excerpt
+  const getFirstSectionParagraphs = (article: Article): string[] => {
+    if (article.content) {
+      const firstH2 = article.content.search(/<h2[\s>]/i);
+      const firstSectionHtml = firstH2 !== -1 ? article.content.slice(0, firstH2) : article.content;
+      const pMatches = Array.from(firstSectionHtml.matchAll(/<p>(.*?)<\/p>/gis))
+        .map(m => m[1].trim())
+        .filter(Boolean);
+      if (pMatches.length > 0) {
+        return pMatches;
+      }
+    }
+    if (article.excerpt) {
+      return article.excerpt.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const latestSectionParagraphs = latestArticle ? getFirstSectionParagraphs(latestArticle) : [];
+
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/30 selection:text-text-main">
       <Header categoryTitle="Home" headerLink="/" />
@@ -122,6 +142,9 @@ export default function Articles() {
             </h2>
 
             <div className="flex flex-col">
+              <div className="text-xs font-mono tracking-wider text-text-muted mb-3 uppercase">
+                {formatArticleDate(latestArticle.date)}
+              </div>
               <Link to={`/articles/${latestArticle.slug}`} className="group block mb-6 md:mb-8">
                 <h3 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary leading-tight group-hover:text-[#886944] transition-colors duration-500">
                   {latestArticle.h1 || latestArticle.title}
@@ -129,11 +152,9 @@ export default function Articles() {
               </Link>
 
               <div className="text-sm md:text-base text-text-muted font-sans leading-relaxed max-w-2xl mb-6 space-y-4">
-                {latestArticle.excerpt ? (
-                  latestArticle.excerpt.split(/\n\n+/).map((para, i) => (
-                    <p key={i}>{para}</p>
-                  ))
-                ) : null}
+                {latestSectionParagraphs.map((para, i) => (
+                  <p key={i} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
               </div>
 
               <div className="flex items-center">

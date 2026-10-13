@@ -89,16 +89,8 @@ export default function ArticleView() {
     }
     setMetaTag('name', 'robots', 'index, follow, max-image-preview:large');
 
-    // Normalize URLs to www.pawelprusko.com
-    const toCanonicalDomain = (url?: string) => {
-      if (!url) return '';
-      return url.replace('https://pawelprusko.com', 'https://www.pawelprusko.com');
-    };
-
     // Canonical link
-    const canonicalHref = toCanonicalDomain(
-      article.canonicalUrl || `https://www.pawelprusko.com/articles/${article.slug}`
-    );
+    const canonicalHref = article.canonicalUrl || `https://www.pawelprusko.com/articles/${article.slug}`;
     let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonicalLink) {
       canonicalLink = document.createElement('link');
@@ -107,9 +99,7 @@ export default function ArticleView() {
     }
     canonicalLink.setAttribute('href', canonicalHref);
 
-    const ogImageHref = toCanonicalDomain(
-      article.ogImage || 'https://www.pawelprusko.com/og-image.jpg'
-    );
+    const ogImageHref = article.ogImage || 'https://pawelprusko.com/og-image.jpg';
     let dynamicAlt = article.ogImageAlt || `${article.seoTitle || article.title} - Pawel Prusko Studio`;
     if (dynamicAlt.includes('Pawel Prusko Studio') && !dynamicAlt.includes(' - Pawel Prusko Studio') && !dynamicAlt.includes(' | Pawel Prusko Studio')) {
       dynamicAlt = dynamicAlt.replace(/(\S)Pawel Prusko Studio/g, '$1 - Pawel Prusko Studio');
