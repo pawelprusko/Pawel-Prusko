@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SceneCard from '../components/SceneCard';
-import { getScenes, type Scene } from '../lib/api';
+import { getScenes, getArticles, formatArticleDate, type Scene, type Article } from '../lib/api';
 import { useState, useEffect } from 'react';
 
 const CULINARY_DOMAINS = [
@@ -70,6 +71,27 @@ export default function Home() {
   const latestDropScene = allScenes.find(s => s.id === 'the-latest-drop');
   const selectedScenes = allScenes.filter(s => s.id !== 'the-latest-drop');
   const [expandedFramework, setExpandedFramework] = useState<string | null>('03');
+
+  const allArticles: Article[] = getArticles();
+  const latestArticle = allArticles.length > 0 ? allArticles[0] : null;
+  const recentArticles = allArticles.length > 1 ? allArticles.slice(1, 4) : [];
+
+  const getTruncatedDescription = (article: Article, maxChars = 200): string => {
+    let text = '';
+    if (article.content) {
+      const firstH2 = article.content.search(/<h2[\s>]/i);
+      const firstSectionHtml = firstH2 !== -1 ? article.content.slice(0, firstH2) : article.content;
+      text = firstSectionHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (!text && article.excerpt) {
+      text = article.excerpt.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+    if (!text) return '';
+    if (text.length <= maxChars) return text;
+    const sub = text.slice(0, maxChars);
+    const lastSpace = sub.lastIndexOf(' ');
+    return (lastSpace > 160 ? sub.slice(0, lastSpace) : sub).trim() + '...';
+  };
 
   useEffect(() => {
     document.title = 'Pawel Prusko | AI Culinary Art Director & Generative Engineer';
@@ -278,9 +300,67 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 5: Frameworks */}
+        {/* Section: Articles & Perspectives */}
         <section className="mb-24">
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(4)} / Frameworks</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
+            05 / ARTICLES & PERSPECTIVES
+          </h2>
+          <p className="text-lg text-text-main font-sans mb-10 leading-relaxed max-w-2xl">
+            Essays on AI culinary art direction and production economics.
+          </p>
+
+          {latestArticle && (
+            <div className="mb-12">
+              <h3 className="text-xs font-mono tracking-widest text-text-muted mb-4 uppercase">
+                LATEST ARTICLE
+              </h3>
+              <Link to={`/articles/${latestArticle.slug}`} className="group block mb-3">
+                <h4 className="font-heading text-3xl md:text-4xl text-secondary leading-tight group-hover:text-[#886944] transition-colors duration-500">
+                  {latestArticle.h1 || latestArticle.title}
+                </h4>
+              </Link>
+              <p className="text-sm md:text-base text-text-muted font-sans leading-relaxed max-w-2xl">
+                {getTruncatedDescription(latestArticle, 200)}
+              </p>
+            </div>
+          )}
+
+          {recentArticles.length > 0 && (
+            <div>
+              <h3 className="text-xs font-mono tracking-widest text-text-muted mb-6 uppercase">
+                RECENT PERSPECTIVES
+              </h3>
+              <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40">
+                {recentArticles.map((article) => (
+                  <article key={article.slug} className="py-4">
+                    <Link to={`/articles/${article.slug}`} className="group block">
+                      <div className="text-xs font-mono tracking-wider text-text-muted mb-1">
+                        {formatArticleDate(article.date)}
+                      </div>
+                      <h4 className="font-heading text-lg text-secondary group-hover:text-[#886944] transition-colors">
+                        {article.h1 || article.title}
+                      </h4>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-8 flex items-center">
+                <Link
+                  to="/articles"
+                  className="group inline-flex items-center cursor-pointer"
+                >
+                  <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 group-hover:border-[#886944] group-hover:text-[#886944] transition-all">
+                    Explore All Articles
+                  </span>
+                </Link>
+              </div>
+            </div>
+          )}
+        </section>
+
+        {/* Section: Frameworks */}
+        <section className="mb-24">
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(5)} / Frameworks</h2>
           <p className="text-lg text-text-main font-sans mb-8 leading-relaxed max-w-2xl">
             Bespoke visual content pipelines built around complete multi-angle scenes for social media calendars, digital campaigns, and high-stakes pitches.
           </p>
@@ -324,9 +404,9 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Section 6: Direct Access */}
+        {/* Section: Direct Access */}
         <section id="contact" className="mb-24">
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(5)} / Direct Access</h2>
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">{getSectionNumber(6)} / Direct Access</h2>
           <div className="flex flex-col">
             <div className="flex flex-col gap-4 mb-6">
               <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">

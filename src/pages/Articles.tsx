@@ -134,11 +134,11 @@ export default function Articles() {
           </div>
         </section>
 
-        {/* 02 / The Latest Article */}
+        {/* 02 / Latest Article */}
         {latestArticle && (
           <section className="mb-24">
             <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-              02 / The Latest Article
+              02 / Latest Article
             </h2>
 
             <div className="flex flex-col">
