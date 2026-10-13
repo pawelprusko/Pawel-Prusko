@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { getScenes } from '../lib/api';
@@ -21,7 +22,94 @@ export default function SceneView() {
     s.sceneSubId === queryId ||
     (s.domainId && s.sceneSubId && queryId.endsWith(s.sceneSubId) && queryId.includes(s.domainId))
   );
-  
+
+  useEffect(() => {
+    if (!currentScene) return;
+
+    const previousTitle = document.title;
+    document.title = `${currentScene.title} | Pawel Prusko Studio`;
+
+    const setMetaTag = (attribute: 'name' | 'property', value: string, content: string) => {
+      let meta = document.querySelector(`meta[${attribute}="${value}"]`) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, value);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+      return meta;
+    };
+
+    const canonicalHref = `https://www.pawelprusko.com/scene/${currentScene.id}`;
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalHref);
+
+    setMetaTag('name', 'description', currentScene.desc);
+    setMetaTag('property', 'og:type', 'video.other');
+    setMetaTag('property', 'og:url', canonicalHref);
+    setMetaTag('property', 'og:title', `${currentScene.title} | Pawel Prusko Studio`);
+    setMetaTag('property', 'og:description', currentScene.desc);
+    setMetaTag('property', 'og:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('property', 'og:image:alt', `${currentScene.title} - Pawel Prusko Studio`);
+    // Twitter Card
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', `${currentScene.title} | Pawel Prusko Studio`);
+    setMetaTag('name', 'twitter:description', currentScene.desc);
+    setMetaTag('name', 'twitter:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('name', 'twitter:image:alt', `${currentScene.title} - Pawel Prusko Studio`);
+
+    // VideoObject Schema (JSON-LD) for SEO & GEO
+    const sceneJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": `${currentScene.title} | Pawel Prusko Studio`,
+      "description": currentScene.desc,
+      "thumbnailUrl": [
+        currentScene.images?.establishing || "https://www.pawelprusko.com/og-image.jpg",
+        currentScene.images?.action || "https://www.pawelprusko.com/og-image.jpg"
+      ],
+      "contentUrl": `https://www.pawelprusko.com${currentScene.videoUrl}`,
+      "embedUrl": canonicalHref,
+      "uploadDate": "2026-10-12T12:00:00+02:00",
+      "inLanguage": "en-US",
+      "creator": {
+        "@type": "Person",
+        "name": "Pawel Prusko",
+        "jobTitle": "AI Culinary Art Director & Generative Engineer",
+        "url": "https://www.pawelprusko.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Pawel Prusko Studio",
+        "url": "https://www.pawelprusko.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.pawelprusko.com/og-image.jpg"
+        }
+      }
+    };
+
+    let scriptTag = document.getElementById('scene-schema-jsonld') as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'scene-schema-jsonld';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.text = JSON.stringify(sceneJsonLd);
+
+    return () => {
+      document.title = previousTitle || 'Pawel Prusko | AI Culinary Art Director & Generative Engineer';
+      const existingScript = document.getElementById('scene-schema-jsonld');
+      if (existingScript) existingScript.remove();
+    };
+  }, [currentScene]);
+
   if (!currentScene) {
     return (
       <div className="min-h-screen bg-background text-text-main flex flex-col">
@@ -95,7 +183,7 @@ export default function SceneView() {
                 <div className="relative w-full overflow-hidden bg-[#E6DBD2]">
                   <img 
                     src={shot.src || shot.fallback} 
-                    alt={shot.label} 
+                    alt={`${currentScene.title} - ${shot.label} - Pawel Prusko Studio`} 
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
                       if (target.src !== shot.fallback) {

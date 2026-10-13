@@ -8,7 +8,7 @@ export interface SitemapUrl {
   priority?: string;
 }
 
-export function generateSitemapUrls(baseUrl = 'https://pawelprusko.com'): SitemapUrl[] {
+export function generateSitemapUrls(baseUrl = 'https://www.pawelprusko.com'): SitemapUrl[] {
   const urls: SitemapUrl[] = [];
   const today = new Date().toISOString().split('T')[0];
 
@@ -97,7 +97,7 @@ export function generateSitemapUrls(baseUrl = 'https://pawelprusko.com'): Sitema
   return urls;
 }
 
-export function generateSitemapXml(baseUrl = 'https://pawelprusko.com'): string {
+export function generateSitemapXml(baseUrl = 'https://www.pawelprusko.com'): string {
   const urls = generateSitemapUrls(baseUrl);
 
   const xmlEntries = urls

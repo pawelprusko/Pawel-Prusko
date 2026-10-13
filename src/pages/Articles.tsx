@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -14,6 +14,82 @@ export default function Articles() {
   const visibleArchiveArticles = showAllArchive 
     ? archiveArticles 
     : archiveArticles.slice(0, 3);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = 'Articles & Perspectives | Pawel Prusko Studio';
+
+    const setMetaTag = (attribute: 'name' | 'property', value: string, content: string) => {
+      let meta = document.querySelector(`meta[${attribute}="${value}"]`) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, value);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+      return meta;
+    };
+
+    setMetaTag('name', 'description', 'Replacing physical studio friction with generative control. Essays on AI culinary art direction and production economics.');
+    setMetaTag('name', 'keywords', 'AI culinary art, virtual food styling, AI food photography, AI studio production, food visual essays');
+    setMetaTag('name', 'robots', 'index, follow, max-image-preview:large');
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', 'https://www.pawelprusko.com/articles');
+
+    setMetaTag('property', 'og:type', 'website');
+    setMetaTag('property', 'og:url', 'https://www.pawelprusko.com/articles');
+    setMetaTag('property', 'og:title', 'Articles & Perspectives | Pawel Prusko Studio');
+    setMetaTag('property', 'og:description', 'Replacing physical studio friction with generative control. Essays on AI culinary art direction and production economics.');
+    setMetaTag('property', 'og:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('property', 'og:image:alt', 'Pawel Prusko Studio - Articles & Perspectives');
+    
+    // Twitter Card
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', 'Articles & Perspectives | Pawel Prusko Studio');
+    setMetaTag('name', 'twitter:description', 'Replacing physical studio friction with generative control. Essays on AI culinary art direction.');
+    setMetaTag('name', 'twitter:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('name', 'twitter:image:alt', 'Pawel Prusko Studio - Articles & Perspectives');
+
+    const jsonLdData = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Articles & Perspectives",
+      "headline": "Articles & Perspectives | Pawel Prusko Studio",
+      "description": "Replacing physical studio friction with generative control. Essays on AI culinary art direction and production economics.",
+      "url": "https://www.pawelprusko.com/articles",
+      "inLanguage": "en-US",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Pawel Prusko Studio",
+        "url": "https://www.pawelprusko.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.pawelprusko.com/og-image.jpg"
+        }
+      }
+    };
+
+    let scriptTag = document.getElementById('articles-schema-jsonld') as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'articles-schema-jsonld';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.text = JSON.stringify(jsonLdData);
+
+    return () => {
+      document.title = previousTitle || 'Pawel Prusko | AI Culinary Art Director & Generative Engineer';
+      const existingScript = document.getElementById('articles-schema-jsonld');
+      if (existingScript) existingScript.remove();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background font-sans selection:bg-primary/30 selection:text-text-main">

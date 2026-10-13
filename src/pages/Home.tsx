@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SceneCard from '../components/SceneCard';
 import { getScenes, type Scene } from '../lib/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const CULINARY_DOMAINS = [
   {
@@ -70,6 +70,116 @@ export default function Home() {
   const latestDropScene = allScenes.find(s => s.id === 'the-latest-drop');
   const selectedScenes = allScenes.filter(s => s.id !== 'the-latest-drop');
   const [expandedFramework, setExpandedFramework] = useState<string | null>('03');
+
+  useEffect(() => {
+    document.title = 'Pawel Prusko | AI Culinary Art Director & Generative Engineer';
+
+    const setMetaTag = (attribute: 'name' | 'property', value: string, content: string) => {
+      let meta = document.querySelector(`meta[${attribute}="${value}"]`) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute(attribute, value);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+      return meta;
+    };
+
+    setMetaTag('name', 'description', 'AI Culinary Art Director crafting high-fashion, editorial F&B visuals and motion. Eliminating physical studio constraints for luxury brands and CPG.');
+    setMetaTag('name', 'keywords', 'AI Culinary Art Director, AI Food Photography, AI Commercial Video F&B, Quiet Luxury CPG, Virtual Food Styling, Pawel Prusko');
+    setMetaTag('name', 'robots', 'index, follow, max-image-preview:large');
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', 'https://www.pawelprusko.com');
+
+    setMetaTag('property', 'og:type', 'website');
+    setMetaTag('property', 'og:url', 'https://www.pawelprusko.com');
+    setMetaTag('property', 'og:title', 'Pawel Prusko | AI Culinary Art Director');
+    setMetaTag('property', 'og:description', 'Eliminating physical studio constraints with Quiet Luxury generative F&B editorial visuals and video.');
+    setMetaTag('property', 'og:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('property', 'og:image:alt', 'Pawel Prusko - AI Culinary Art Director & Generative Engineer');
+    
+    // Twitter Card
+    setMetaTag('name', 'twitter:card', 'summary_large_image');
+    setMetaTag('name', 'twitter:title', 'Pawel Prusko | AI Culinary Art Director');
+    setMetaTag('name', 'twitter:description', 'Quiet Luxury AI F&B visual production for global brands.');
+    setMetaTag('name', 'twitter:image', 'https://www.pawelprusko.com/og-image.jpg');
+    setMetaTag('name', 'twitter:image:alt', 'Pawel Prusko - AI Culinary Art Director & Generative Engineer');
+
+    // Structured Entity Knowledge Graph (JSON-LD) for GEO & AI Search Engines
+    const homeJsonLd = {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "https://www.pawelprusko.com/#person",
+          "name": "Pawel Prusko",
+          "jobTitle": "AI Culinary Art Director & Generative Engineer",
+          "description": "AI Culinary Art Director crafting high-fashion, editorial food visuals & motion. Eliminating physical studio constraints and overhead to deliver campaign-ready assets in days, not weeks.",
+          "url": "https://www.pawelprusko.com",
+          "image": "https://www.pawelprusko.com/og-image.jpg",
+          "sameAs": [
+            "https://www.linkedin.com/in/pawelprusko"
+          ],
+          "knowsAbout": [
+            "AI Culinary Art",
+            "AI Food Photography",
+            "AI Commercial Video F&B",
+            "Generative Food & Beverage Video and Photography Production",
+            "Culinary Art Direction",
+            "Fluid Dynamics in F&B Video",
+            "Quiet Luxury Visual Aesthetics",
+            "Virtual Food Styling",
+            "CPG Visual Asset Development",
+            "Digital Liquid Modeling & Emulsions"
+          ]
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://www.pawelprusko.com/#organization",
+          "name": "Pawel Prusko Studio",
+          "url": "https://www.pawelprusko.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.pawelprusko.com/og-image.jpg"
+          },
+          "founder": {
+            "@id": "https://www.pawelprusko.com/#person"
+          },
+          "description": "Virtual food styling and generative AI studio production for Quiet Luxury CPG brands, global packaging, and commercial video."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.pawelprusko.com/#website",
+          "url": "https://www.pawelprusko.com",
+          "name": "Pawel Prusko Studio",
+          "inLanguage": "en-US",
+          "publisher": {
+            "@id": "https://www.pawelprusko.com/#organization"
+          }
+        }
+      ]
+    };
+
+    let scriptTag = document.getElementById('home-schema-jsonld') as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'home-schema-jsonld';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.text = JSON.stringify(homeJsonLd);
+
+    return () => {
+      const existingScript = document.getElementById('home-schema-jsonld');
+      if (existingScript) existingScript.remove();
+    };
+  }, []);
 
   const getSectionNumber = (baseNum: number) => {
     const num = SHOW_LATEST_DROP ? baseNum + 1 : baseNum;

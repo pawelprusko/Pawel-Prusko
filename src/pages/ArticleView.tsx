@@ -89,8 +89,16 @@ export default function ArticleView() {
     }
     setMetaTag('name', 'robots', 'index, follow, max-image-preview:large');
 
+    // Normalize URLs to www.pawelprusko.com
+    const toCanonicalDomain = (url?: string) => {
+      if (!url) return '';
+      return url.replace('https://pawelprusko.com', 'https://www.pawelprusko.com');
+    };
+
     // Canonical link
-    const canonicalHref = article.canonicalUrl || `https://pawelprusko.com/articles/${article.slug}`;
+    const canonicalHref = toCanonicalDomain(
+      article.canonicalUrl || `https://www.pawelprusko.com/articles/${article.slug}`
+    );
     let canonicalLink = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonicalLink) {
       canonicalLink = document.createElement('link');
@@ -99,35 +107,55 @@ export default function ArticleView() {
     }
     canonicalLink.setAttribute('href', canonicalHref);
 
+    const ogImageHref = toCanonicalDomain(
+      article.ogImage || 'https://www.pawelprusko.com/og-image.jpg'
+    );
+    let dynamicAlt = article.ogImageAlt || `${article.seoTitle || article.title} - Pawel Prusko Studio`;
+    if (dynamicAlt.includes('Pawel Prusko Studio') && !dynamicAlt.includes(' - Pawel Prusko Studio') && !dynamicAlt.includes(' | Pawel Prusko Studio')) {
+      dynamicAlt = dynamicAlt.replace(/(\S)Pawel Prusko Studio/g, '$1 - Pawel Prusko Studio');
+    }
+
     // Open Graph / Social Sharing
     setMetaTag('property', 'og:type', 'article');
     setMetaTag('property', 'og:url', canonicalHref);
     setMetaTag('property', 'og:title', article.seoTitle || article.title);
     setMetaTag('property', 'og:description', article.metaDescription || article.excerpt);
-    setMetaTag('property', 'og:image', article.ogImage || 'https://pawelprusko.com/og-image.jpg');
+    setMetaTag('property', 'og:image', ogImageHref);
     setMetaTag('property', 'og:image:width', '1200');
     setMetaTag('property', 'og:image:height', '630');
-    setMetaTag('property', 'og:image:alt', article.ogImageAlt || `${article.title} - Pawel Prusko Studio`);
+    setMetaTag('property', 'og:image:alt', dynamicAlt);
 
     // Twitter Card
     setMetaTag('name', 'twitter:card', 'summary_large_image');
     setMetaTag('name', 'twitter:title', article.seoTitle || article.title);
     setMetaTag('name', 'twitter:description', article.metaDescription || article.excerpt);
-    setMetaTag('name', 'twitter:image', article.ogImage || 'https://pawelprusko.com/og-image.jpg');
-    setMetaTag('name', 'twitter:image:alt', article.ogImageAlt || `${article.title} - Pawel Prusko Studio`);
+    setMetaTag('name', 'twitter:image', ogImageHref);
+    setMetaTag('name', 'twitter:image:alt', dynamicAlt);
 
-    // BlogPosting JSON-LD Schema
+    // Plain text article body for GEO (Generative Engine Optimization)
+    const cleanArticleBody = (article.content || '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    // BlogPosting JSON-LD Schema (GEO & AI Engine optimized)
     const jsonLdData = {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": article.seoTitle || article.title,
       "description": article.metaDescription || article.excerpt,
+      "articleBody": cleanArticleBody,
+      "inLanguage": "en-US",
       "keywords": article.keywords,
       "datePublished": article.date,
       "dateModified": article.date,
       "image": {
         "@type": "ImageObject",
-        "url": article.ogImage || "https://pawelprusko.com/og-image.jpg",
+        "url": ogImageHref,
         "width": 1200,
         "height": 630
       },
@@ -139,15 +167,15 @@ export default function ArticleView() {
         "@type": "Person",
         "name": "Pawel Prusko",
         "jobTitle": "AI Culinary Art Director & Generative Engineer",
-        "url": "https://pawelprusko.com"
+        "url": "https://www.pawelprusko.com"
       },
       "publisher": {
         "@type": "Organization",
         "name": "Pawel Prusko Studio",
-        "url": "https://pawelprusko.com",
+        "url": "https://www.pawelprusko.com",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://pawelprusko.com/og-image.jpg"
+          "url": "https://www.pawelprusko.com/og-image.jpg"
         }
       }
     };
@@ -163,9 +191,20 @@ export default function ArticleView() {
 
     return () => {
       document.title = previousTitle || 'Pawel Prusko | AI Culinary Art Director & Generative Engineer';
-      if (previousCanonical && canonicalLink) {
-        canonicalLink.setAttribute('href', previousCanonical);
+      if (canonicalLink) {
+        canonicalLink.setAttribute('href', previousCanonical || 'https://www.pawelprusko.com');
       }
+      setMetaTag('name', 'description', 'AI Culinary Art Director crafting high-fashion, editorial F&B visuals and motion. Eliminating physical studio constraints for luxury brands and CPG.');
+      setMetaTag('property', 'og:type', 'website');
+      setMetaTag('property', 'og:url', 'https://www.pawelprusko.com');
+      setMetaTag('property', 'og:title', 'Pawel Prusko | AI Culinary Art Director');
+      setMetaTag('property', 'og:description', 'Eliminating physical studio constraints with Quiet Luxury generative F&B editorial visuals and video.');
+      setMetaTag('property', 'og:image', 'https://www.pawelprusko.com/og-image.jpg');
+      setMetaTag('property', 'og:image:alt', 'Pawel Prusko - AI Culinary Art Director & Generative Engineer');
+      setMetaTag('name', 'twitter:title', 'Pawel Prusko | AI Culinary Art Director');
+      setMetaTag('name', 'twitter:description', 'Quiet Luxury AI F&B visual production for global brands.');
+      setMetaTag('name', 'twitter:image', 'https://www.pawelprusko.com/og-image.jpg');
+      setMetaTag('name', 'twitter:image:alt', 'Pawel Prusko - AI Culinary Art Director & Generative Engineer');
       const existingScript = document.getElementById('article-schema-jsonld');
       if (existingScript) {
         existingScript.remove();
