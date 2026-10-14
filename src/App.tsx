@@ -6,6 +6,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import Home from './pages/Home';
+import Scenes from './pages/Scenes';
 import SceneView from './pages/SceneView';
 import Articles from './pages/Articles';
 import ArticleView from './pages/ArticleView';
@@ -83,6 +84,7 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/scenes" element={<Scenes />} />
         <Route path="/articles" element={<Articles />} />
         <Route path="/article/:slug" element={<ArticleView />} />
         <Route path="/articles/:slug" element={<ArticleView />} />

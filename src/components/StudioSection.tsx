@@ -5,9 +5,16 @@ import { getStudioScene } from '../lib/api';
 interface StudioSectionProps {
   sectionNumber?: string;
   context?: 'index' | 'article';
+  buttonText?: string;
+  linkTo?: string;
 }
 
-export default function StudioSection({ sectionNumber = '03', context = 'index' }: StudioSectionProps) {
+export default function StudioSection({
+  sectionNumber = '03',
+  context = 'index',
+  buttonText = 'Enter the Studio',
+  linkTo = '/scenes',
+}: StudioSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
   const studioScene = getStudioScene(context);
@@ -49,8 +56,11 @@ export default function StudioSection({ sectionNumber = '03', context = 'index' 
       </h2>
 
       <div className="flex flex-col gap-20 md:gap-28">
-        <Link to="/" className="group block cursor-pointer">
-          <div className="relative aspect-[4/5] w-full overflow-hidden mb-4 rounded-none bg-[#E6DBD2]">
+        <Link to={linkTo} className="group block cursor-pointer">
+          <div 
+            className="relative aspect-[4/5] w-full overflow-hidden mb-4 rounded-none bg-[#E6DBD2]"
+            style={{ aspectRatio: '4 / 5' }}
+          >
             {videoSrc && !videoError ? (
               <video
                 ref={videoRef}
@@ -84,7 +94,7 @@ export default function StudioSection({ sectionNumber = '03', context = 'index' 
 
           <div className="flex items-center gap-3">
             <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 group-hover:border-[#886944] group-hover:text-[#886944] transition-all">
-              Explore Scenes
+              {buttonText}
             </span>
           </div>
         </Link>

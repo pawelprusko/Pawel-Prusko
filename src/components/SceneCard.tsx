@@ -48,7 +48,10 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
 
   const innerContent = (
     <>
-      <div className="relative aspect-[4/5] w-full overflow-hidden mb-4 rounded-none bg-[#E6DBD2]">
+      <div 
+        className="relative aspect-[4/5] w-full overflow-hidden mb-4 rounded-none bg-[#E6DBD2]"
+        style={{ aspectRatio: '4 / 5' }}
+      >
         {/* Gradient ukryty na prośbę: 
         <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-transparent z-10 pointer-events-none" /> 
         */}

@@ -26,6 +26,44 @@ function dynamicSitemapPlugin(): Plugin {
             return;
           }
         }
+        if (url === '/api/contact' && req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk;
+          });
+          req.on('end', () => {
+            try {
+              const data = JSON.parse(body || '{}');
+              console.log('[API Contact Received for hello@pawelprusko.com]:', data);
+              res.setHeader('Content-Type', 'application/json');
+              res.statusCode = 200;
+              res.end(JSON.stringify({ success: true, message: 'Inquiry received for hello@pawelprusko.com' }));
+            } catch {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: 'Invalid payload' }));
+            }
+          });
+          return;
+        }
+        if (url === '/api/waitlist' && req.method === 'POST') {
+          let body = '';
+          req.on('data', (chunk) => {
+            body += chunk;
+          });
+          req.on('end', () => {
+            try {
+              const data = JSON.parse(body || '{}');
+              console.log('[API Waitlist Received]:', data);
+              res.setHeader('Content-Type', 'application/json');
+              res.statusCode = 200;
+              res.end(JSON.stringify({ success: true, message: 'Added to waitlist' }));
+            } catch {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: 'Invalid payload' }));
+            }
+          });
+          return;
+        }
         next();
       });
     },

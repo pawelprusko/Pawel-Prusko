@@ -1,75 +1,310 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, MouseEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-export default function Header({ 
-  categoryTitle, 
-  headerLink = '/',
-  showArticles = false
-}: { 
-  categoryTitle?: string; 
-  headerLink?: string; 
+export interface HeaderProps {
+  categoryTitle?: string;
+  headerLink?: string;
   showArticles?: boolean;
-}) {
-  const [scrolled, setScrolled] = useState(false);
+}
 
+// Unified CSS styling for all 3 mobile header action states: "MENU +", "CLOSE ✕", "INQUIRE →"
+const UNIFIED_MOBILE_ACTION_CLASS =
+  'inline-flex items-center gap-1.5 font-mono text-xs font-normal tracking-widest uppercase text-text-main hover:text-secondary transition-colors cursor-pointer select-none leading-none py-1 bg-transparent border-0 outline-none';
+
+export default function Header({}: HeaderProps = {}) {
+  const [scrolled, setScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const isHomePage = location.pathname === '/' || location.pathname === '';
+
+  // Track scroll position for transparent vs blurred background
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > (categoryTitle ? 120 : 30));
+      setScrolled(window.scrollY > 20);
     };
-    
+
     handleScroll();
-    
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [categoryTitle]);
+  }, []);
 
-  const showDynamicTitle = scrolled && categoryTitle;
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen && isHomePage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen, isHomePage]);
+
+  // Close mobile menu on Escape key press
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  // Navigate to Home / top of page
+  const handleGoHome = (e?: MouseEvent) => {
+    if (e) e.preventDefault();
+    setIsMenuOpen(false);
+    if (isHomePage) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.location.hash) {
+        window.history.pushState(null, '', '/');
+      }
+    } else {
+      navigate('/');
+    }
+  };
+
+  // Smart Anchor Navigation for Home Page
+  const handleScrollToAnchor = (targetAnchor: string, e?: MouseEvent) => {
+    if (e) e.preventDefault();
+    setIsMenuOpen(false);
+    const cleanId = targetAnchor.replace(/^#/, '');
+
+    if (isHomePage) {
+      const el =
+        document.getElementById(cleanId) ||
+        (cleanId === 'direct-access' ? document.getElementById('contact') : null);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `/#${cleanId}`);
+      }
+    } else {
+      navigate(`/#${cleanId}`);
+    }
+  };
+
+  // Direct scroll to #contact on the current subpage
+  const handleScrollToContact = (e?: MouseEvent) => {
+    if (e) e.preventDefault();
+    setIsMenuOpen(false);
+    const contactEl =
+      document.getElementById('contact') ||
+      document.getElementById('direct-access');
+    if (contactEl) {
+      contactEl.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', '#contact');
+    } else {
+      navigate('/#contact');
+    }
+  };
 
   return (
-    <header 
-      className={`sticky top-0 z-40 transition-colors duration-300 w-full pt-[max(env(safe-area-inset-top),_0px)] ${
-        scrolled 
-          ? 'bg-background/90 backdrop-blur-md border-b border-white/5' 
-          : 'bg-background border-b border-transparent'
-      }`}
-    >
-      <div className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between w-full">
-        <div className="grid items-center">
-          {/* Dynamic Category/Page link on scroll */}
-          <Link 
-            to={headerLink} 
-            className={`col-start-1 row-start-1 flex items-center gap-2 font-heading font-bold text-lg tracking-tight text-text-main/90 group transition-all duration-500 ${
-              showDynamicTitle ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-            }`}
-          >
-            <span className="inline-block text-xl font-bold leading-none -translate-y-[1.5px] group-hover:-translate-x-1 transition-transform">←</span>
-            <span>{categoryTitle}</span>
-          </Link>
-
-          {/* Logo Home link */}
-          <Link 
-            to="/" 
-            className={`col-start-1 row-start-1 font-heading font-bold text-xl md:text-2xl tracking-tight text-text-main/90 transition-all duration-500 ${
-              showDynamicTitle ? 'opacity-0 -translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'
-            }`}
+    <>
+      <header
+        className={`sticky top-0 z-50 transition-colors duration-300 w-full pt-[max(env(safe-area-inset-top),_0px)] ${
+          scrolled && !isMenuOpen
+            ? 'bg-background/95 backdrop-blur-md'
+            : 'bg-background'
+        }`}
+      >
+        <div className="max-w-3xl mx-auto px-6 h-16 md:h-20 flex items-center justify-between w-full box-border">
+          {/* Lewa strona: Logo Paweł Prusko (zlinkowane do strony głównej /, zawsze stabilne) */}
+          <a
+            href="/"
+            onClick={handleGoHome}
+            className="font-heading font-bold text-xl md:text-2xl tracking-tight text-text-main/90 hover:text-text-main transition-colors cursor-pointer select-none leading-none inline-flex items-center"
           >
             Paweł Prusko
-          </Link>
-        </div>
+          </a>
 
-        {/* Right navigation link to Articles */}
-        {showArticles && (
-          <nav className={`flex items-center transition-all duration-500 ${showDynamicTitle ? 'opacity-0 -translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-            <Link
-              to="/articles"
-              className="flex items-center gap-2 font-heading font-bold text-lg tracking-tight text-text-main/90 group"
+          {/* Prawa strona */}
+          {isHomePage ? (
+            /* WARIANT A: STRONA GŁÓWNA */
+            <div className="flex items-center">
+              {/* DESKTOP (screens >= 1024px): nawigacja horyzontalna */}
+              <nav className="hidden lg:flex items-center gap-8">
+                <a
+                  href="/#bespoke-production"
+                  onClick={(e) => handleScrollToAnchor('bespoke-production', e)}
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                >
+                  Bespoke Production
+                </a>
+
+                <a
+                  href="/#instant-studio"
+                  onClick={(e) => handleScrollToAnchor('instant-studio', e)}
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                >
+                  Instant Studio
+                </a>
+
+                <a
+                  href="/#articles"
+                  onClick={(e) => handleScrollToAnchor('articles', e)}
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                >
+                  Articles
+                </a>
+              </nav>
+
+              {/* MOBILE (screens < 1024px): Przełącznik "MENU +" / "CLOSE ✕" */}
+              <div className="lg:hidden flex items-center">
+                <button
+                  type="button"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className={UNIFIED_MOBILE_ACTION_CLASS}
+                  aria-label={isMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+                >
+                  <span className="font-mono text-xs font-normal tracking-widest uppercase leading-none">
+                    {isMenuOpen ? 'CLOSE' : 'MENU'}
+                  </span>
+                  <span className="font-mono text-xs leading-none" aria-hidden="true">
+                    {isMenuOpen ? '✕' : '+'}
+                  </span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            /* WARIANT B: WSZYSTKIE PODSTRONY */
+            <div className="flex items-center">
+              {/* DESKTOP (screens >= 1024px): link editorial Inquire */}
+              <div className="hidden lg:flex items-center">
+                <a
+                  href="#contact"
+                  onClick={handleScrollToContact}
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                >
+                  Inquire
+                </a>
+              </div>
+
+              {/* MOBILE (screens < 1024px): Przycisk "INQUIRE →" z identycznym ostylowaniem */}
+              <div className="lg:hidden flex items-center">
+                <a
+                  href="#contact"
+                  onClick={handleScrollToContact}
+                  className={UNIFIED_MOBILE_ACTION_CLASS}
+                  aria-label="Direct Access and Inquiries"
+                >
+                  <span className="font-mono text-xs font-normal tracking-widest uppercase leading-none">
+                    INQUIRE
+                  </span>
+                  <span className="font-mono text-xs leading-none" aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+
+      {/* FULL-SCREEN OVERLAY DLA MOBILE (wyłącznie na stronie głównej, screens < 1024px) */}
+      {isHomePage && (
+        <div
+          className={`fixed inset-0 z-40 bg-[#F9F2EA] flex flex-col justify-between px-6 pb-8 pt-[calc(max(env(safe-area-inset-top),0px)+4.5rem)] transition-all duration-300 ease-in-out lg:hidden ${
+            isMenuOpen
+              ? 'opacity-100 pointer-events-auto translate-y-0'
+              : 'opacity-0 pointer-events-none -translate-y-2'
+          }`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation Menu"
+        >
+          {/* Nawigacja w stylu magazynowym (duża typografia serif, wiersz pod wierszem z numeracją 01, 02, 03...) */}
+          <nav className="flex flex-col gap-4 sm:gap-5 my-auto w-full max-w-xl mx-auto py-4">
+            {/* 01 / HOME */}
+            <a
+              href="/"
+              onClick={handleGoHome}
+              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
-              <span>Articles</span>
-              <span className="inline-block text-xl font-bold leading-none -translate-y-[1.5px] group-hover:translate-x-1 transition-transform">→</span>
-            </Link>
+              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
+                01 /
+              </span>
+              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+                HOME
+              </span>
+            </a>
+
+            {/* 02 / BESPOKE SCENE PRODUCTION */}
+            <a
+              href="/#bespoke-production"
+              onClick={(e) => handleScrollToAnchor('bespoke-production', e)}
+              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
+            >
+              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
+                02 /
+              </span>
+              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+                BESPOKE SCENE PRODUCTION
+              </span>
+            </a>
+
+            {/* 03 / INSTANT CULINARY STUDIO */}
+            <a
+              href="/#instant-studio"
+              onClick={(e) => handleScrollToAnchor('instant-studio', e)}
+              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
+            >
+              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
+                03 /
+              </span>
+              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+                INSTANT CULINARY STUDIO
+              </span>
+            </a>
+
+            {/* 04 / ARTICLES & PERSPECTIVES */}
+            <a
+              href="/#articles"
+              onClick={(e) => handleScrollToAnchor('articles', e)}
+              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
+            >
+              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
+                04 /
+              </span>
+              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+                ARTICLES & PERSPECTIVES
+              </span>
+            </a>
+
+            {/* 05 / DIRECT ACCESS */}
+            <a
+              href="/#direct-access"
+              onClick={(e) => handleScrollToAnchor('direct-access', e)}
+              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
+            >
+              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
+                05 /
+              </span>
+              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+                DIRECT ACCESS
+              </span>
+            </a>
           </nav>
-        )}
-      </div>
-    </header>
+
+          {/* Dolna stopka w nakładce mobilnej */}
+          <div className="w-full max-w-xl mx-auto pt-6 border-t border-text-darker/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[11px] text-text-muted">
+            <a
+              href="mailto:hello@pawelprusko.com"
+              className="hover:text-secondary transition-colors"
+            >
+              hello@pawelprusko.com
+            </a>
+            <span>Quiet Luxury AI Culinary Art Direction</span>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

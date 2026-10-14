@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StudioSection from '../components/StudioSection';
+import FrameworksSection from '../components/FrameworksSection';
+import DirectAccessSection from '../components/DirectAccessSection';
 import { getArticles, formatArticleDate, type Article } from '../lib/api';
 
 export default function Articles() {
@@ -96,7 +98,7 @@ export default function Articles() {
     if (article.content) {
       const firstH2 = article.content.search(/<h2[\s>]/i);
       const firstSectionHtml = firstH2 !== -1 ? article.content.slice(0, firstH2) : article.content;
-      const pMatches = Array.from(firstSectionHtml.matchAll(/<p>(.*?)<\/p>/gis))
+      const pMatches = Array.from(firstSectionHtml.matchAll(/<p(?:\s+[^>]*)?>([\s\S]*?)<\/p>/gi))
         .map(m => m[1].trim())
         .filter(Boolean);
       if (pMatches.length > 0) {
@@ -120,7 +122,7 @@ export default function Articles() {
         <div className="mb-12 flex items-center text-xs font-mono tracking-widest text-text-muted uppercase">
           <Link to="/" className="flex items-center gap-2 hover:text-text-main transition-colors group">
             <span className="text-lg leading-none group-hover:-translate-x-1 transition-transform mt-[-2px]">←</span>
-            Home
+            HOME
           </Link>
         </div>
 
@@ -212,28 +214,11 @@ export default function Articles() {
         {/* 03 / STUDIO */}
         <StudioSection sectionNumber="03" />
 
-        {/* Direct Access */}
-        <section id="contact" className="mb-24">
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            04 / Direct Access
-          </h2>
-          <div className="flex flex-col">
-            <div className="flex flex-col gap-4 mb-6">
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
-                Available for global commissions, agency pitches, and monthly brand retainers.
-              </p>
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
-                Request a tailored sample render for your upcoming launch during your initial inquiry.
-              </p>
-            </div>
-            <a
-              href="mailto:hello@pawelprusko.com"
-              className="font-heading text-2xl text-secondary hover:text-[#886944] transition-colors inline-block w-max"
-            >
-              hello@pawelprusko.com
-            </a>
-          </div>
-        </section>
+        {/* 04 / THE FRAMEWORKS */}
+        <FrameworksSection sectionNumber="04" />
+
+        {/* 05 / Direct Access */}
+        <DirectAccessSection sectionNumber="05" />
       </main>
 
       <Footer />

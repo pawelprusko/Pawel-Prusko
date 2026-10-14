@@ -15,6 +15,11 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
+
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text-main);

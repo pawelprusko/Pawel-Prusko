@@ -3,6 +3,8 @@ import { useEffect, useState, type MouseEvent } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StudioSection from '../components/StudioSection';
+import FrameworksSection from '../components/FrameworksSection';
+import DirectAccessSection from '../components/DirectAccessSection';
 import { getArticles, getArticleBySlug, formatArticleDate, type Article } from '../lib/api';
 
 function formatArticleContent(html: string): string {
@@ -44,7 +46,7 @@ export default function ArticleView() {
       if (href && href.startsWith('/')) {
         e.preventDefault();
         navigate(href);
-        window.scrollTo(0, 0);
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     }
   };
@@ -157,15 +159,15 @@ export default function ArticleView() {
         "@type": "Person",
         "name": "Pawel Prusko",
         "jobTitle": "AI Culinary Art Director & Generative Engineer",
-        "url": "https://www.pawelprusko.com"
+        "url": "https://pawelprusko.com"
       },
       "publisher": {
         "@type": "Organization",
         "name": "Pawel Prusko Studio",
-        "url": "https://www.pawelprusko.com",
+        "url": "https://pawelprusko.com",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.pawelprusko.com/og-image.jpg"
+          "url": "https://pawelprusko.com/og-image.jpg"
         }
       }
     };
@@ -214,7 +216,7 @@ export default function ArticleView() {
             to="/articles"
             className="font-mono text-xs tracking-wider text-[#886944] uppercase hover:underline"
           >
-            ← All Articles
+            ← ALL ARTICLES
           </Link>
         </main>
         <Footer />
@@ -231,7 +233,7 @@ export default function ArticleView() {
         <div className="mb-12 flex items-center text-xs font-mono tracking-widest text-text-muted uppercase">
           <Link to="/articles" className="flex items-center gap-2 hover:text-text-main transition-colors group">
             <span className="text-lg leading-none group-hover:-translate-x-1 transition-transform mt-[-2px]">←</span>
-            All Articles
+            ALL ARTICLES
           </Link>
         </div>
 
@@ -297,28 +299,11 @@ export default function ArticleView() {
         {/* Bridge Section: 03 / STUDIO */}
         <StudioSection sectionNumber="03" context="article" />
 
+        {/* 04 / THE FRAMEWORKS */}
+        <FrameworksSection sectionNumber="04" />
+
         {/* Direct Access Section */}
-        <section id="contact" className="mb-24">
-          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            04 / Direct Access
-          </h2>
-          <div className="flex flex-col">
-            <div className="flex flex-col gap-4 mb-6">
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
-                Available for global commissions, agency pitches, and monthly brand retainers.
-              </p>
-              <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl">
-                Request a tailored sample render for your upcoming launch during your initial inquiry.
-              </p>
-            </div>
-            <a
-              href="mailto:hello@pawelprusko.com"
-              className="font-heading text-2xl text-secondary hover:text-[#886944] transition-colors inline-block w-max"
-            >
-              hello@pawelprusko.com
-            </a>
-          </div>
-        </section>
+        <DirectAccessSection sectionNumber="05" />
       </main>
 
       <Footer />

@@ -1,10 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import DirectAccessSection from '../components/DirectAccessSection';
 import { getScenes } from '../lib/api';
+import { FRAMEWORKS } from './Home';
 
 export default function SceneView() {
+  const [expandedFramework, setExpandedFramework] = useState<string | null>('03');
   const params = useParams<{ id?: string; domainId?: string; sceneId?: string }>();
   
   const allScenes = getScenes();
@@ -112,10 +115,16 @@ export default function SceneView() {
 
   if (!currentScene) {
     return (
-      <div className="min-h-screen bg-background text-text-main flex flex-col">
-        <Header categoryTitle="Home" />
-        <main className="flex-1 flex items-center justify-center">
-          <p className="font-mono text-sm tracking-widest uppercase">Scene not found.</p>
+      <div className="min-h-screen bg-background text-text-main flex flex-col font-sans">
+        <Header />
+        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <p className="font-mono text-sm tracking-widest uppercase text-text-muted mb-6">Scene not found.</p>
+          <Link
+            to="/scenes"
+            className="font-mono text-xs tracking-wider text-[#886944] uppercase hover:underline"
+          >
+            ← ALL 12 SCENES
+          </Link>
         </main>
       </div>
     );
@@ -135,9 +144,9 @@ export default function SceneView() {
         
         {/* Navigation */}
         <div className="mb-12 flex items-center text-xs font-mono tracking-widest text-text-muted uppercase">
-          <Link to="/" className="flex items-center gap-2 hover:text-text-main transition-colors group">
+          <Link to="/scenes" className="flex items-center gap-2 hover:text-text-main transition-colors group">
             <span className="text-lg leading-none group-hover:-translate-x-1 transition-transform mt-[-2px]">←</span>
-            Home
+            ALL 12 SCENES
           </Link>
         </div>
 
@@ -201,7 +210,7 @@ export default function SceneView() {
 
         {/* Explore More Scenes */}
         {otherScenes.length > 0 && (
-          <section className="mb-12">
+          <section className="mb-24">
             <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
               03 / Continue {currentScene.domain || currentScene.domainId}
             </h2>
@@ -223,7 +232,7 @@ export default function SceneView() {
             </div>
             
             <div className="flex items-center">
-              <Link to="/" className="group inline-flex items-center gap-3">
+              <Link to="/scenes" className="group inline-flex items-center gap-3">
                 <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 group-hover:border-[#886944] group-hover:text-[#886944] transition-all">
                   Explore All Collections
                 </span>
@@ -232,6 +241,56 @@ export default function SceneView() {
           </section>
         )}
 
+        {/* 04 / The Frameworks */}
+        <section className="mb-24">
+          <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
+            04 / THE FRAMEWORKS
+          </h2>
+          <p className="text-lg text-text-main font-sans mb-8 leading-relaxed max-w-2xl">
+            Bespoke visual content pipelines built around complete multi-angle scenes for social media calendars, digital campaigns, and high-stakes pitches.
+          </p>
+          <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40 mb-8">
+            {FRAMEWORKS.map((fw) => {
+              const isExpanded = expandedFramework === fw.number;
+              return (
+                <div key={fw.number} className="flex flex-col">
+                  <button 
+                    onClick={() => setExpandedFramework(isExpanded ? null : fw.number)}
+                    className="flex items-center justify-between w-full py-4 text-left group gap-4 cursor-pointer"
+                  >
+                    <div className="flex-1 flex flex-col items-start gap-1.5">
+                      {fw.isBestseller && (
+                        <span className="bg-[#2C2C2C] text-[#F9F2EA] text-[10px] font-mono tracking-widest uppercase px-2 py-0.5 font-medium select-none">
+                          MOST REQUESTED
+                        </span>
+                      )}
+                      <h3 className="font-heading text-2xl text-secondary group-hover:text-[#886944] transition-colors">
+                        {fw.title}
+                      </h3>
+                    </div>
+                    <span className="text-text-main/30 group-hover:text-text-main transition-colors text-2xl font-light font-sans">
+                      {isExpanded ? '−' : '+'}
+                    </span>
+                  </button>
+                  {isExpanded && (
+                    <div className="pb-8 pl-4 pr-4">
+                      <div className="flex flex-col gap-4 text-sm font-sans text-text-muted leading-relaxed">
+                        <p><strong className="text-text-main font-semibold">Target:</strong> {fw.target}</p>
+                        <p><strong className="text-text-main font-semibold">Output:</strong> {fw.output}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-sm text-text-muted font-sans leading-relaxed max-w-2xl">
+            To maintain direct founder access and uncompromised visual quality, active retainer capacity is strictly managed. All frameworks can be aligned with your internal campaign calendar.
+          </p>
+        </section>
+
+        {/* Direct Access Section */}
+        <DirectAccessSection sectionNumber="05" />
       </main>
 
       <Footer />
