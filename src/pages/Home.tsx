@@ -382,8 +382,8 @@ export default function Home() {
             <BeforeAfterSlider
               beforeSrc={beforeImg}
               afterSrc={afterImg}
-              beforeLabel="Raw Smartphone Shot"
-              afterLabel="Instant Studio Engine"
+              beforeLabel="RAW SHOT"
+              afterLabel="INSTANT STUDIO"
             />
           </div>
 

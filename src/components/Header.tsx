@@ -7,9 +7,10 @@ export interface HeaderProps {
   showArticles?: boolean;
 }
 
-// Unified CSS styling for all 3 mobile header action states: "MENU +", "CLOSE ✕", "INQUIRE →"
-const UNIFIED_MOBILE_ACTION_CLASS =
-  'inline-flex items-center gap-1.5 font-mono text-xs font-normal tracking-widest uppercase text-text-main hover:text-secondary transition-colors cursor-pointer select-none leading-none py-1 bg-transparent border-0 outline-none';
+// Unified CSS styling for all header action states ("Menu +", "Close ✕", "Inquire →")
+// Using the exact elegant Serif font (font-heading / Playfair Display) as "Inquire" on desktop and logo "Paweł Prusko"
+const UNIFIED_HEADER_ACTION_CLASS =
+  'inline-flex items-center gap-1.5 font-heading text-base md:text-[17px] tracking-tight font-normal text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer select-none leading-none py-1 bg-transparent border-0 outline-none whitespace-nowrap';
 
 export default function Header({}: HeaderProps = {}) {
   const [scrolled, setScrolled] = useState(false);
@@ -129,12 +130,12 @@ export default function Header({}: HeaderProps = {}) {
           {isHomePage ? (
             /* WARIANT A: STRONA GŁÓWNA */
             <div className="flex items-center">
-              {/* DESKTOP (screens >= 1024px): nawigacja horyzontalna */}
+              {/* DESKTOP (screens >= 1024px): nawigacja horyzontalna w font-heading */}
               <nav className="hidden lg:flex items-center gap-8">
                 <a
                   href="/#bespoke-production"
                   onClick={(e) => handleScrollToAnchor('bespoke-production', e)}
-                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap leading-none py-1"
                 >
                   Bespoke Production
                 </a>
@@ -142,7 +143,7 @@ export default function Header({}: HeaderProps = {}) {
                 <a
                   href="/#instant-studio"
                   onClick={(e) => handleScrollToAnchor('instant-studio', e)}
-                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap leading-none py-1"
                 >
                   Instant Studio
                 </a>
@@ -150,59 +151,45 @@ export default function Header({}: HeaderProps = {}) {
                 <a
                   href="/#articles"
                   onClick={(e) => handleScrollToAnchor('articles', e)}
-                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap leading-none py-1"
                 >
                   Articles
                 </a>
               </nav>
 
-              {/* MOBILE (screens < 1024px): Przełącznik "MENU +" / "CLOSE ✕" */}
+              {/* MOBILE (screens < 1024px): Przełącznik "Menu +" / "Close ✕" ze szeryfowym font-heading */}
               <div className="lg:hidden flex items-center">
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className={UNIFIED_MOBILE_ACTION_CLASS}
+                  className={UNIFIED_HEADER_ACTION_CLASS}
                   aria-label={isMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
                 >
-                  <span className="font-mono text-xs font-normal tracking-widest uppercase leading-none">
-                    {isMenuOpen ? 'CLOSE' : 'MENU'}
+                  <span className="font-heading text-base md:text-[17px] tracking-tight leading-none">
+                    {isMenuOpen ? 'Close' : 'Menu'}
                   </span>
-                  <span className="font-mono text-xs leading-none" aria-hidden="true">
+                  <span className="font-heading text-base md:text-[17px] leading-none" aria-hidden="true">
                     {isMenuOpen ? '✕' : '+'}
                   </span>
                 </button>
               </div>
             </div>
           ) : (
-            /* WARIANT B: WSZYSTKIE PODSTRONY */
+            /* WARIANT B: WSZYSTKIE PODSTRONY (Desktop + Mobile) - w pełni ujednolicony szeryfowy krój pisma */
             <div className="flex items-center">
-              {/* DESKTOP (screens >= 1024px): link editorial Inquire */}
-              <div className="hidden lg:flex items-center">
-                <a
-                  href="#contact"
-                  onClick={handleScrollToContact}
-                  className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap"
-                >
+              <a
+                href="#contact"
+                onClick={handleScrollToContact}
+                className={UNIFIED_HEADER_ACTION_CLASS}
+                aria-label="Direct Access and Inquiries"
+              >
+                <span className="font-heading text-base md:text-[17px] tracking-tight leading-none">
                   Inquire
-                </a>
-              </div>
-
-              {/* MOBILE (screens < 1024px): Przycisk "INQUIRE →" z identycznym ostylowaniem */}
-              <div className="lg:hidden flex items-center">
-                <a
-                  href="#contact"
-                  onClick={handleScrollToContact}
-                  className={UNIFIED_MOBILE_ACTION_CLASS}
-                  aria-label="Direct Access and Inquiries"
-                >
-                  <span className="font-mono text-xs font-normal tracking-widest uppercase leading-none">
-                    INQUIRE
-                  </span>
-                  <span className="font-mono text-xs leading-none" aria-hidden="true">
-                    →
-                  </span>
-                </a>
-              </div>
+                </span>
+                <span className="font-heading text-base md:text-[17px] leading-none" aria-hidden="true">
+                  →
+                </span>
+              </a>
             </div>
           )}
         </div>
@@ -294,14 +281,8 @@ export default function Header({}: HeaderProps = {}) {
           </nav>
 
           {/* Dolna stopka w nakładce mobilnej */}
-          <div className="w-full max-w-xl mx-auto pt-6 border-t border-text-darker/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[11px] text-text-muted">
-            <a
-              href="mailto:hello@pawelprusko.com"
-              className="hover:text-secondary transition-colors"
-            >
-              hello@pawelprusko.com
-            </a>
-            <span>Quiet Luxury AI Culinary Art Direction</span>
+          <div className="w-full max-w-xl mx-auto pt-2 font-mono text-[11px] text-text-muted">
+            <span>New-Gen AI Culinary Art Studio</span>
           </div>
         </div>
       )}

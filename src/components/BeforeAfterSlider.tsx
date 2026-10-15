@@ -10,8 +10,8 @@ interface BeforeAfterSliderProps {
 export default function BeforeAfterSlider({
   beforeSrc,
   afterSrc,
-  beforeLabel = 'Raw Smartphone Shot',
-  afterLabel = 'Instant Studio Engine',
+  beforeLabel = 'RAW SHOT',
+  afterLabel = 'INSTANT STUDIO',
 }: BeforeAfterSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
@@ -100,14 +100,14 @@ export default function BeforeAfterSlider({
       </div>
 
       {/* Badges / Labels */}
-      <div className="absolute top-4 left-4 z-20 pointer-events-none">
-        <span className="bg-[#2C2C2C]/85 backdrop-blur-sm text-[#F9F2EA] text-[10px] font-mono tracking-widest uppercase px-2.5 py-1 font-medium select-none shadow-sm">
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 pointer-events-none">
+        <span className="inline-block bg-[#2C2C2C]/85 backdrop-blur-sm text-[#F9F2EA] text-[10px] sm:text-[11px] font-mono tracking-wider uppercase px-2.5 sm:px-3 py-1 font-medium select-none shadow-sm rounded-none">
           {beforeLabel}
         </span>
       </div>
 
-      <div className="absolute top-4 right-4 z-20 pointer-events-none">
-        <span className="bg-[#AA8559]/90 backdrop-blur-sm text-[#F9F2EA] text-[10px] font-mono tracking-widest uppercase px-2.5 py-1 font-medium select-none shadow-sm">
+      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 pointer-events-none">
+        <span className="inline-block bg-[#AA8559]/90 backdrop-blur-sm text-[#F9F2EA] text-[10px] sm:text-[11px] font-mono tracking-wider uppercase px-2.5 sm:px-3 py-1 font-medium select-none shadow-sm rounded-none">
           {afterLabel}
         </span>
       </div>
@@ -119,8 +119,23 @@ export default function BeforeAfterSlider({
       >
         <div className="absolute top-0 bottom-0 -left-[1px] w-[2px] bg-[#F9F2EA] shadow-[0_0_10px_rgba(0,0,0,0.4)]" />
         {/* Handle circle */}
-        <div className="absolute top-1/2 -left-4 -translate-y-1/2 w-8 h-8 rounded-full bg-[#F9F2EA] text-[#2C2C2C] flex items-center justify-center shadow-lg border border-black/10 text-xs font-mono font-bold tracking-tighter select-none">
-          <span className="text-[10px] leading-none">◂▸</span>
+        <div className="absolute top-1/2 -left-[18px] -translate-y-1/2 w-9 h-9 rounded-full bg-[#F9F2EA] text-[#2C2C2C] flex items-center justify-center shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-black/10 select-none">
+          <div className="flex items-center justify-center gap-1 text-[#2C2C2C]">
+            <svg
+              className="w-2.5 h-3.5 fill-current"
+              viewBox="0 0 10 16"
+              aria-hidden="true"
+            >
+              <path d="M8 3L2 8l6 5V3z" />
+            </svg>
+            <svg
+              className="w-2.5 h-3.5 fill-current"
+              viewBox="0 0 10 16"
+              aria-hidden="true"
+            >
+              <path d="M2 3l6 5-6 5V3z" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
