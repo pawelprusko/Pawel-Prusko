@@ -207,74 +207,60 @@ export default function Header({}: HeaderProps = {}) {
           aria-modal="true"
           aria-label="Navigation Menu"
         >
-          {/* Nawigacja w stylu magazynowym (duża typografia serif, wiersz pod wierszem z numeracją 01, 02, 03...) */}
+          {/* Nawigacja w stylu magazynowym (duża typografia serif, wiersz pod wierszem z numeracją 01, 02, 03, 04) */}
           <nav className="flex flex-col gap-4 sm:gap-5 my-auto w-full max-w-xl mx-auto py-4">
-            {/* 01 / HOME */}
-            <a
-              href="/"
-              onClick={handleGoHome}
-              className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
-            >
-              <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
-                01 /
-              </span>
-              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
-                HOME
-              </span>
-            </a>
-
-            {/* 02 / BESPOKE SCENE PRODUCTION */}
+            {/* 01 / BESPOKE PRODUCTION */}
             <a
               href="/#bespoke-production"
               onClick={(e) => handleScrollToAnchor('bespoke-production', e)}
               className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
               <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
-                02 /
+                01 /
               </span>
-              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
-                BESPOKE SCENE PRODUCTION
+              <span className="font-heading text-[23px] sm:text-[28px] md:text-3xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight whitespace-nowrap">
+                BESPOKE PRODUCTION
               </span>
             </a>
 
-            {/* 03 / INSTANT CULINARY STUDIO */}
+            {/* 02 / INSTANT STUDIO */}
             <a
               href="/#instant-studio"
               onClick={(e) => handleScrollToAnchor('instant-studio', e)}
               className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
               <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
-                03 /
+                02 /
               </span>
-              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
-                INSTANT CULINARY STUDIO
+              <span className="font-heading text-[23px] sm:text-[28px] md:text-3xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight whitespace-nowrap">
+                INSTANT STUDIO
               </span>
             </a>
 
-            {/* 04 / ARTICLES & PERSPECTIVES */}
+            {/* 03 / ARTICLES */}
             <a
               href="/#articles"
               onClick={(e) => handleScrollToAnchor('articles', e)}
               className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
               <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
-                04 /
+                03 /
               </span>
-              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
-                ARTICLES & PERSPECTIVES
+              <span className="font-heading text-[23px] sm:text-[28px] md:text-3xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight whitespace-nowrap">
+                ARTICLES
               </span>
             </a>
 
-            {/* 05 / DIRECT ACCESS */}
+            {/* 04 / DIRECT ACCESS */}
             <a
               href="/#direct-access"
               onClick={(e) => handleScrollToAnchor('direct-access', e)}
               className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
               <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">
-                05 /
+                04 /
               </span>
-              <span className="font-heading text-2xl sm:text-3xl md:text-4xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight">
+              <span className="font-heading text-[23px] sm:text-[28px] md:text-3xl text-text-main group-hover:text-secondary group-hover:translate-x-2 transition-all duration-300 tracking-tight whitespace-nowrap">
                 DIRECT ACCESS
               </span>
             </a>
