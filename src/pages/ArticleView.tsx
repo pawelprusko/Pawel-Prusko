@@ -243,7 +243,7 @@ export default function ArticleView() {
             <span>{formatArticleDate(article.date)}</span>
           </div>
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary leading-tight mb-8">
-            {article.h1 || article.title}
+            {article.title}
           </h1>
         </header>
 
@@ -273,7 +273,7 @@ export default function ArticleView() {
                       {formatArticleDate(item.date)}
                     </div>
                     <h3 className="font-heading text-lg text-secondary group-hover:text-[#886944] transition-colors">
-                      {item.h1 || item.title}
+                      {item.title}
                     </h3>
                   </Link>
                 </article>

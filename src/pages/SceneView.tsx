@@ -193,6 +193,8 @@ export default function SceneView() {
                   <img 
                     src={shot.src || shot.fallback} 
                     alt={`${currentScene.title} - ${shot.label} - Pawel Prusko Studio`} 
+                    loading="lazy"
+                    decoding="async"
                     onError={(e) => {
                       const target = e.currentTarget as HTMLImageElement;
                       if (target.src !== shot.fallback) {

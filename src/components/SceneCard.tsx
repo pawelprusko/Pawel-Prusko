@@ -21,18 +21,17 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
         entries.forEach((entry) => {
           if (!videoRef.current) return;
           if (entry.isIntersecting) {
-            // Uruchomienie odtwarzania wideo gdy wejdzie co najmniej do połowy ekranu
+            // Uruchomienie odtwarzania wideo gdy zbliża się do ekranu
             videoRef.current.play().catch(() => {
               // Wyciszenie błędów związanych z autoplay w niektórych przeglądarkach
             });
           } else {
-            // Zatrzymanie i reset gdy zniknie z widoku
+            // Zatrzymanie gdy zniknie z widoku
             videoRef.current.pause();
-            videoRef.current.currentTime = 0;
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.15, rootMargin: '250px' }
     );
 
     if (videoRef.current) {
@@ -52,9 +51,6 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
         className="relative aspect-[4/5] w-full overflow-hidden mb-4 rounded-none bg-[#E6DBD2]"
         style={{ aspectRatio: '4 / 5' }}
       >
-        {/* Gradient ukryty na prośbę: 
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-transparent z-10 pointer-events-none" /> 
-        */}
         <video
           ref={videoRef}
           src={videoSrc}
@@ -62,7 +58,7 @@ export default function SceneCard({ id, videoSrc, title, desc, externalLink, but
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out"
         />
       </div>

@@ -149,7 +149,7 @@ export default function Articles() {
               </div>
               <Link to={`/articles/${latestArticle.slug}`} className="group block mb-6 md:mb-8">
                 <h3 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary leading-tight group-hover:text-[#886944] transition-colors duration-500">
-                  {latestArticle.h1 || latestArticle.title}
+                  {latestArticle.title}
                 </h3>
               </Link>
 
@@ -188,7 +188,7 @@ export default function Articles() {
                       {formatArticleDate(article.date)}
                     </div>
                     <h3 className="font-heading text-lg text-secondary group-hover:text-[#886944] transition-colors">
-                      {article.h1 || article.title}
+                      {article.title}
                     </h3>
                   </Link>
                 </article>
