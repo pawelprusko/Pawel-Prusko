@@ -1,21 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StudioSection from '../components/StudioSection';
 import FrameworksSection from '../components/FrameworksSection';
 import DirectAccessSection from '../components/DirectAccessSection';
+import ArticlesArchive from '../components/ArticlesArchive';
 import { getArticles, formatArticleDate, type Article } from '../lib/api';
 
 export default function Articles() {
-  const [showAllArchive, setShowAllArchive] = useState(false);
   const articles: Article[] = getArticles();
   const latestArticle = articles.length > 0 ? articles[0] : null;
   const archiveArticles = articles.length > 1 ? articles.slice(1) : [];
-
-  const visibleArchiveArticles = showAllArchive 
-    ? archiveArticles 
-    : archiveArticles.slice(0, 3);
 
   useEffect(() => {
     const previousTitle = document.title;
@@ -174,42 +170,7 @@ export default function Articles() {
         )}
 
         {/* 03 / Articles Archive */}
-        {archiveArticles.length > 0 && (
-          <section className="mb-24">
-            <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-              03 / Articles Archive
-            </h2>
-
-            <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40">
-              {visibleArchiveArticles.map((article) => (
-                <article key={article.slug} className="py-4">
-                  <Link to={`/articles/${article.slug}`} className="group block">
-                    <div className="text-xs font-mono tracking-wider text-text-muted mb-1">
-                      {formatArticleDate(article.date)}
-                    </div>
-                    <h3 className="font-heading text-lg text-secondary group-hover:text-[#886944] transition-colors">
-                      {article.title}
-                    </h3>
-                  </Link>
-                </article>
-              ))}
-            </div>
-
-            {archiveArticles.length > 3 && (
-              <div className="mt-8 flex items-center">
-                <button
-                  type="button"
-                  onClick={() => setShowAllArchive(!showAllArchive)}
-                  className="group inline-flex items-center cursor-pointer"
-                >
-                  <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 group-hover:border-[#886944] group-hover:text-[#886944] transition-all">
-                    {showAllArchive ? 'Show Less' : 'Show All Articles'}
-                  </span>
-                </button>
-              </div>
-            )}
-          </section>
-        )}
+        <ArticlesArchive articles={archiveArticles} sectionNumber="03" />
 
         {/* 03 / STUDIO */}
         <StudioSection sectionNumber="03" />

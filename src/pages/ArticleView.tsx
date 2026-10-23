@@ -1,10 +1,11 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, type MouseEvent } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StudioSection from '../components/StudioSection';
 import FrameworksSection from '../components/FrameworksSection';
 import DirectAccessSection from '../components/DirectAccessSection';
+import ArticlesArchive from '../components/ArticlesArchive';
 import { getArticles, getArticleBySlug, formatArticleDate, type Article } from '../lib/api';
 
 function formatArticleContent(html: string): string {
@@ -37,7 +38,6 @@ export default function ArticleView() {
   const params = useParams<{ slug?: string }>();
   const slug = params.slug || '';
   const article = getArticleBySlug(slug);
-  const [showAllArchive, setShowAllArchive] = useState(false);
 
   const handleArticleClick = (e: MouseEvent<HTMLDivElement>) => {
     const target = (e.target as HTMLElement).closest('a');
@@ -54,9 +54,6 @@ export default function ArticleView() {
   const allArticles: Article[] = getArticles();
   // Filter out current article so archive shows other articles (or all articles)
   const archiveArticles = allArticles.filter((a) => a.slug !== slug);
-  const visibleArchiveArticles = showAllArchive
-    ? archiveArticles
-    : archiveArticles.slice(0, 3);
 
   useEffect(() => {
     if (!article) return;
@@ -259,42 +256,7 @@ export default function ArticleView() {
         </article>
 
         {/* 02 / Articles Archive */}
-        {archiveArticles.length > 0 && (
-          <section className="mb-24">
-            <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-              02 / Articles Archive
-            </h2>
-
-            <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40">
-              {visibleArchiveArticles.map((item) => (
-                <article key={item.slug} className="py-4">
-                  <Link to={`/articles/${item.slug}`} className="group block">
-                    <div className="text-xs font-mono tracking-wider text-text-muted mb-1">
-                      {formatArticleDate(item.date)}
-                    </div>
-                    <h3 className="font-heading text-lg text-secondary group-hover:text-[#886944] transition-colors">
-                      {item.title}
-                    </h3>
-                  </Link>
-                </article>
-              ))}
-            </div>
-
-            {archiveArticles.length > 3 && (
-              <div className="mt-8 flex items-center">
-                <button
-                  type="button"
-                  onClick={() => setShowAllArchive(!showAllArchive)}
-                  className="group inline-flex items-center cursor-pointer"
-                >
-                  <span className="text-sm font-semibold tracking-wide text-text-main border-b border-text-main/30 pb-0.5 group-hover:border-[#886944] group-hover:text-[#886944] transition-all">
-                    {showAllArchive ? 'Show Less' : 'Show All Articles'}
-                  </span>
-                </button>
-              </div>
-            )}
-          </section>
-        )}
+        <ArticlesArchive articles={archiveArticles} sectionNumber="02" />
 
         {/* Bridge Section: 03 / STUDIO */}
         <StudioSection sectionNumber="03" context="article" />
