@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.pawelprusko.com/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.pawelprusko.com/articles</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -37,8 +37,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.pawelprusko.com/articles/engineering-viscoelastic-threading-optical-refraction-high-viscosity-syrup-assets</loc>
-    <lastmod>2026-10-22</lastmod>
+    <loc>https://www.pawelprusko.com/articles/engineering-particulate-cloud-motion-light-scattering-dry-seasoning-assets</loc>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

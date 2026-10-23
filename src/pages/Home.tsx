@@ -94,22 +94,24 @@ export default function Home() {
   // Google Sheets Webhook URL for Waitlist
   const GOOGLE_SHEET_WAITLIST_URL = 'https://script.google.com/macros/s/AKfycbwPbyMwPeWK-lDqdXGlJsN8RFsK3k97SiD-xDM_39SNf1H12zZ8gWoVX-AbkryWWF1q/exec';
 
-  const getTruncatedDescription = (article: Article, maxChars = 200): string => {
-    let text = '';
+  const getFirstSectionParagraphs = (article: Article): string[] => {
     if (article.content) {
       const firstH2 = article.content.search(/<h2[\s>]/i);
       const firstSectionHtml = firstH2 !== -1 ? article.content.slice(0, firstH2) : article.content;
-      text = firstSectionHtml.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      const pMatches = Array.from(firstSectionHtml.matchAll(/<p(?:\s+[^>]*)?>([\s\S]*?)<\/p>/gi))
+        .map(m => m[1].trim())
+        .filter(Boolean);
+      if (pMatches.length > 0) {
+        return pMatches;
+      }
     }
-    if (!text && article.excerpt) {
-      text = article.excerpt.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (article.excerpt) {
+      return article.excerpt.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
     }
-    if (!text) return '';
-    if (text.length <= maxChars) return text;
-    const sub = text.slice(0, maxChars);
-    const lastSpace = sub.lastIndexOf(' ');
-    return (lastSpace > 160 ? sub.slice(0, lastSpace) : sub).trim() + '...';
+    return [];
   };
+
+  const latestSectionParagraphs = latestArticle ? getFirstSectionParagraphs(latestArticle) : [];
 
   const handleWaitlistSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -511,9 +513,11 @@ export default function Home() {
                   {latestArticle.title}
                 </h4>
               </Link>
-              <p className="text-sm md:text-base text-text-muted font-sans leading-relaxed max-w-2xl mb-6">
-                {getTruncatedDescription(latestArticle, 200)}
-              </p>
+              <div className="text-sm md:text-base text-text-muted font-sans leading-relaxed max-w-2xl mb-6 space-y-4">
+                {latestSectionParagraphs.map((para, i) => (
+                  <p key={i} dangerouslySetInnerHTML={{ __html: para }} />
+                ))}
+              </div>
               <div className="flex items-center">
                 <Link
                   to={`/articles/${latestArticle.slug}`}
