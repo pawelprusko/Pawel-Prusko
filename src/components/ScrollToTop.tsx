@@ -13,9 +13,11 @@ export default function ScrollToTop() {
   useEffect(() => {
     if (hash) {
       const scrollTarget = () => {
+        const cleanId = hash.replace(/^#/, '');
         const element =
-          document.querySelector(hash) ||
-          (hash === '#direct-access' ? document.querySelector('#contact') : null);
+          document.getElementById(cleanId) ||
+          (cleanId === 'direct-access' ? document.getElementById('contact') : null) ||
+          (cleanId === 'instant-studio' ? document.getElementById('05-instant-culinary-studio') : null);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
           return true;

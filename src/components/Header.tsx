@@ -141,8 +141,8 @@ export default function Header({}: HeaderProps = {}) {
                 </a>
 
                 <a
-                  href="/#instant-studio"
-                  onClick={(e) => handleScrollToAnchor('instant-studio', e)}
+                  href="/#05-instant-culinary-studio"
+                  onClick={(e) => handleScrollToAnchor('05-instant-culinary-studio', e)}
                   className="font-heading text-base md:text-[17px] tracking-tight text-text-main/80 hover:text-secondary transition-colors duration-200 cursor-pointer whitespace-nowrap leading-none py-1"
                 >
                   Instant Studio
@@ -225,8 +225,8 @@ export default function Header({}: HeaderProps = {}) {
 
             {/* 02 / INSTANT STUDIO */}
             <a
-              href="/#instant-studio"
-              onClick={(e) => handleScrollToAnchor('instant-studio', e)}
+              href="/#05-instant-culinary-studio"
+              onClick={(e) => handleScrollToAnchor('05-instant-culinary-studio', e)}
               className="group flex items-baseline gap-3 sm:gap-4 py-2 border-b border-text-darker/15 hover:border-secondary transition-colors text-left cursor-pointer w-full"
             >
               <span className="font-mono text-xs sm:text-sm tracking-widest text-text-muted/70 group-hover:text-secondary transition-colors flex-shrink-0">

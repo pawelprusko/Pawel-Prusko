@@ -1,10 +1,10 @@
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SceneCard from '../components/SceneCard';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
+import HumanPresenceSection from '../components/HumanPresenceSection';
 import DirectAccessSection from '../components/DirectAccessSection';
 import { getScenes, getArticles, formatArticleDate, type Scene, type Article } from '../lib/api';
 
@@ -84,16 +84,6 @@ export default function Home() {
   const latestArticle = allArticles.length > 0 ? allArticles[0] : null;
   const recentArticles = allArticles.length > 1 ? allArticles.slice(1, 4) : [];
 
-  // Waitlist form state
-  const [waitlistEmail, setWaitlistEmail] = useState('');
-  const [isSubmittingWaitlist, setIsSubmittingWaitlist] = useState(false);
-  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
-  const [showWaitlistToast, setShowWaitlistToast] = useState(false);
-  const [toastWaitlistEmail, setToastWaitlistEmail] = useState('');
-
-  // Google Sheets Webhook URL for Waitlist
-  const GOOGLE_SHEET_WAITLIST_URL = 'https://script.google.com/macros/s/AKfycbwPbyMwPeWK-lDqdXGlJsN8RFsK3k97SiD-xDM_39SNf1H12zZ8gWoVX-AbkryWWF1q/exec';
-
   const getFirstSectionParagraphs = (article: Article): string[] => {
     if (article.content) {
       const firstH2 = article.content.search(/<h2[\s>]/i);
@@ -113,47 +103,10 @@ export default function Home() {
 
   const latestSectionParagraphs = latestArticle ? getFirstSectionParagraphs(latestArticle) : [];
 
-  const handleWaitlistSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (isSubmittingWaitlist) return;
-
-    const emailToSubmit = waitlistEmail.trim();
-    if (!emailToSubmit) return;
-
-    setIsSubmittingWaitlist(true);
-
-    try {
-      // Single direct dispatch to Google Sheets Apps Script webhook
-      if (GOOGLE_SHEET_WAITLIST_URL) {
-        await fetch(GOOGLE_SHEET_WAITLIST_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            email: emailToSubmit,
-            source: 'Homepage / Instant Culinary Studio',
-            timestamp: new Date().toISOString(),
-          }),
-        }).catch((err) => {
-          console.warn('[Waitlist] Google Sheets webhook error:', err);
-        });
-      }
-
-      setWaitlistSuccess(true);
-      setToastWaitlistEmail(emailToSubmit);
-      setShowWaitlistToast(true);
-      setWaitlistEmail('');
-
-      // Auto dismiss toast after 7s
-      setTimeout(() => {
-        setShowWaitlistToast(false);
-      }, 7000);
-    } catch {
-      setWaitlistSuccess(true);
-      setToastWaitlistEmail(emailToSubmit);
-      setShowWaitlistToast(true);
-    } finally {
-      setIsSubmittingWaitlist(false);
+  const handleScrollToDirectAccess = () => {
+    const el = document.getElementById('direct-access') || document.getElementById('contact');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -365,18 +318,22 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Sekcja 04: Instant Culinary Studio (NOWA SEKCJA - Teaser SaaS) */}
-        <section id="instant-studio" className="mb-24 scroll-mt-24">
+        {/* Sekcja 04: Human Presence & Editorial Realism */}
+        <HumanPresenceSection />
+
+        {/* Sekcja 05: Instant Culinary Studio (Bespoke Reference-to-Editorial Art Direction) */}
+        <span id="instant-studio" className="block relative -top-24 pointer-events-none" />
+        <section id="05-instant-culinary-studio" className="mb-24 scroll-mt-24">
           <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            04 / INSTANT CULINARY STUDIO
+            05 / INSTANT CULINARY STUDIO
           </h2>
 
           <h3 className="font-heading text-4xl md:text-5xl lg:text-6xl text-secondary leading-tight mb-4">
-            Smartphone-to-Editorial AI Transformation
+            Reference-to-Editorial Culinary Elevation
           </h3>
 
           <p className="text-lg text-text-main font-sans leading-relaxed max-w-2xl mb-8">
-            Built for restaurants, cocktail bars, and CPG teams. Turn raw kitchen or smartphone photos into campaign-ready visual assets in seconds — preserving 100% of your dish identity while applying high-fashion studio lighting.
+            A personalized, high-touch art direction service for restaurants, F&amp;B brands, and cookbook publishers. Start from an existing reference or smartphone photo of your actual prepared dish—we elevate lighting, surfaces, and atmosphere into Quiet Luxury editorial photography for menus, digital campaigns, and print publications while remaining 100% faithful to your exact plating, ingredients, and structure.
           </p>
 
           {/* Interaktywny suwak Before / After */}
@@ -392,88 +349,53 @@ export default function Home() {
           {/* 3 Filary Wartości - Układ wiersz pod wierszem (Editorial Layout) */}
           <div className="flex flex-col divide-y divide-text-darker/40 border-y border-text-darker/40 mb-12">
             <div className="py-6 md:py-8 flex flex-col md:flex-row md:items-baseline justify-between gap-3 md:gap-8">
-              <h4 className="font-heading text-xl sm:text-2xl md:text-2xl lg:text-[26px] text-secondary md:w-[46%] flex-shrink-0 md:whitespace-nowrap">
-                100% Dish Integrity
+              <h4 className="font-heading text-xl sm:text-2xl md:text-[25px] text-secondary md:w-[44%] flex-shrink-0 leading-snug">
+                100% Structural &amp; Ingredient Fidelity
               </h4>
               <p className="text-sm md:text-base font-sans text-text-muted leading-relaxed flex-1">
-                No AI hallucinations. Your exact ingredients, plating, and textures remain completely unaltered.
+                Your real dish stays untouched. Exact ingredients, proportions, plating geometry, and culinary textures from your reference shot are preserved without alteration.
               </p>
             </div>
             <div className="py-6 md:py-8 flex flex-col md:flex-row md:items-baseline justify-between gap-3 md:gap-8">
-              <h4 className="font-heading text-xl sm:text-2xl md:text-2xl lg:text-[26px] text-secondary md:w-[46%] flex-shrink-0 md:whitespace-nowrap">
-                Editorial Chiaroscuro
+              <h4 className="font-heading text-xl sm:text-2xl md:text-[25px] text-secondary md:w-[44%] flex-shrink-0 leading-snug">
+                Quiet Luxury Editorial Styling
               </h4>
               <p className="text-sm md:text-base font-sans text-text-muted leading-relaxed flex-1">
-                Replaces harsh flash or flat kitchen neon with soft, directional daylight and rich shadows.
+                Harsh kitchen lighting and cluttered backgrounds are replaced with directional chiaroscuro daylight, artisanal tableware, and refined tactile surfaces tailored for menus, campaigns, or cookbooks.
               </p>
             </div>
             <div className="py-6 md:py-8 flex flex-col md:flex-row md:items-baseline justify-between gap-3 md:gap-8">
-              <h4 className="font-heading text-xl sm:text-2xl md:text-2xl lg:text-[26px] text-secondary md:w-[46%] flex-shrink-0 md:whitespace-nowrap">
-                Zero Studio Overhead
+              <h4 className="font-heading text-xl sm:text-2xl md:text-[25px] text-secondary md:w-[44%] flex-shrink-0 leading-snug">
+                Bespoke 1-on-1 Art Direction
               </h4>
               <p className="text-sm md:text-base font-sans text-text-muted leading-relaxed flex-1">
-                Get luxury agency-grade visuals in 10 seconds without hiring a full production team or food stylist.
+                No generic software presets or automated filters. Every image is personally art-directed and refined around your dish and brand guidelines—delivering studio-grade assets without a physical photoshoot.
               </p>
             </div>
           </div>
 
-          {/* Formularz Waitlist */}
-          <div className="mt-10">
-            <div className="max-w-xl">
-              <h4 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-3 uppercase">
-                Early Access Waitlist
-              </h4>
-              {waitlistSuccess ? (
-                <div className="p-5 bg-[#AA8559]/10 border border-[#AA8559]/30 text-text-main font-sans text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#AA8559] flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-secondary">
-                        You're on the list.
-                      </p>
-                      <p className="text-xs text-text-muted mt-0.5">
-                        We'll send your 3 complimentary launch credits to {toastWaitlistEmail || 'your email'} upon launch.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setWaitlistSuccess(false)}
-                    className="text-xs font-mono tracking-wider uppercase text-[#AA8559] hover:text-[#886944] underline cursor-pointer whitespace-nowrap self-end sm:self-auto"
-                  >
-                    Register another email
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleWaitlistSubmit} className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    required
-                    value={waitlistEmail}
-                    onChange={(e) => setWaitlistEmail(e.target.value)}
-                    placeholder="Enter your work email"
-                    className="flex-1 bg-transparent border border-text-darker/40 px-4 py-3 text-sm text-text-main placeholder:text-text-muted/60 font-sans focus:outline-none focus:border-secondary transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isSubmittingWaitlist}
-                    className="bg-[#2C2C2C] text-[#F9F2EA] px-6 py-3 font-mono text-xs tracking-wider uppercase font-semibold hover:bg-[#AA8559] transition-colors cursor-pointer select-none whitespace-nowrap disabled:opacity-50"
-                  >
-                    {isSubmittingWaitlist ? 'Requesting...' : 'Request Early Access →'}
-                  </button>
-                </form>
-              )}
-            </div>
+          {/* Direct Personal Inquiry CTA */}
+          <div className="mt-10 max-w-xl">
+            <p className="text-sm md:text-base text-text-muted font-sans leading-relaxed mb-5">
+              Have existing dish photos ready for elevation? Send a sample frame for a tailored consultation.
+            </p>
+            <button
+              type="button"
+              onClick={handleScrollToDirectAccess}
+              className="bg-[#181716] text-[#F9F2EA] px-6 py-3 font-mono text-xs tracking-wider uppercase font-semibold hover:bg-[#A8845A] transition-colors cursor-pointer select-none inline-block whitespace-nowrap"
+            >
+              DISCUSS YOUR DISHES
+            </button>
           </div>
         </section>
 
-        {/* Sekcja 05: The Engine (Bez headline, tylko subheadline i punkty) */}
+        {/* Sekcja 06: The Engine */}
         <section className="mb-24">
           <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            05 / THE ENGINE
+            06 / THE ENGINE
           </h2>
           <p className="text-lg text-text-main font-sans mb-10 leading-relaxed max-w-2xl">
-            One proprietary visual engine powering both bespoke editorial productions and the automated Instant Culinary Studio.
+            One proprietary visual engine powering both bespoke scene productions and Instant Culinary Studio dish elevations.
           </p>
           <div className="flex flex-col gap-8 md:gap-12">
             {ENGINE_FEATURES.map((feat) => (
@@ -494,10 +416,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Sekcja 06: Articles & Perspectives */}
+        {/* Sekcja 07: Articles & Perspectives */}
         <section id="articles" className="mb-24 scroll-mt-24">
           <h2 className="text-xs font-mono font-semibold tracking-widest text-text-muted mb-6 uppercase">
-            06 / ARTICLES & PERSPECTIVES
+            07 / ARTICLES & PERSPECTIVES
           </h2>
           <p className="text-lg text-text-main font-sans mb-10 leading-relaxed max-w-2xl">
             Essays on AI culinary art direction and production economics.
@@ -564,41 +486,11 @@ export default function Home() {
           )}
         </section>
 
-        {/* Sekcja 07: Direct Access */}
-        <DirectAccessSection sectionNumber="07" />
+        {/* Sekcja 08: Direct Access */}
+        <DirectAccessSection sectionNumber="08" />
       </main>
 
       <Footer />
-
-      {/* Floating Waitlist Toast Notification */}
-      {showWaitlistToast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 max-w-[calc(100vw-3rem)] sm:max-w-md bg-[#1C1A18] text-[#FAF6F0] p-5 shadow-2xl border border-[#AA8559]/60 flex flex-col gap-2 transition-all duration-300 animate-in fade-in slide-in-from-bottom-5"
-        >
-          <div className="flex items-center justify-between gap-3 border-b border-[#FAF6F0]/10 pb-2">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#AA8559] flex-shrink-0" />
-              <span className="text-[11px] font-mono tracking-widest uppercase text-[#AA8559] font-semibold">
-                Early Access Reserved
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowWaitlistToast(false)}
-              className="text-[#FAF6F0]/60 hover:text-[#FAF6F0] p-1 -mr-1 transition-colors cursor-pointer"
-              aria-label="Close notification"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-          <p className="text-sm font-sans text-[#FAF6F0]/90 leading-snug pt-1">
-            Your spot for <span className="text-white font-medium">Instant Culinary Studio</span> has been secured for{' '}
-            <span className="text-[#AA8559] font-mono text-xs">{toastWaitlistEmail}</span>. Your 3 complimentary launch credits will be delivered upon release.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
